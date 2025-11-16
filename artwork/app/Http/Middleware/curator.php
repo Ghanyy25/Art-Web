@@ -11,7 +11,7 @@ class Curator
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->role == 'curator') {
+        if (Auth::check()&&Auth::user()->role == 'curator') {
             return $next($request);
         }
 
