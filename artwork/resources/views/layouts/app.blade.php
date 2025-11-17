@@ -10,13 +10,25 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+            {{-- @include('layouts.navigation') --}}
+            @if(!Auth::check())
+                @include('layouts.navigation-guest')
+            @else
+                @if(Auth::user()->role == 'admin')
+                    @include('layouts.navigation-admin')
+                @elseif(Auth::user()->role == 'curator')
+                    @include('layouts.navigation-curator')
+                @else
+                    @include('layouts.navigation-member')
+                @endif
+            @endif
 
             <!-- Page Heading -->
             @isset($header)

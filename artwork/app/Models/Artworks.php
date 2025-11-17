@@ -41,12 +41,15 @@ class Artworks extends Model
         return $this->belongsTo(Categories::class);
     }
 
+    // === PERBAIKI SEMUA FUNGSI DI BAWAH INI ===
+
     /**
      * Get all comments on this artwork.
      */
     public function comments(): HasMany
     {
-        return $this->hasMany(Comments::class);
+        // Tambahkan 'artwork_id'
+        return $this->hasMany(Comments::class, 'artwork_id');
     }
 
     /**
@@ -54,7 +57,8 @@ class Artworks extends Model
      */
     public function likes(): HasMany
     {
-        return $this->hasMany(Likes::class);
+        // Tambahkan 'artwork_id'
+        return $this->hasMany(Likes::class, 'artwork_id');
     }
 
     /**
@@ -62,7 +66,8 @@ class Artworks extends Model
      */
     public function favorites(): HasMany
     {
-        return $this->hasMany(Favorites::class);
+        // Tambahkan 'artwork_id'
+        return $this->hasMany(Favorites::class, 'artwork_id');
     }
 
     /**
@@ -70,7 +75,8 @@ class Artworks extends Model
      */
     public function challengeSubmissions(): HasMany
     {
-        return $this->hasMany(ChallengeSubmission::class);
+        // Tambahkan 'artwork_id'
+        return $this->hasMany(ChallengeSubmission::class, 'artwork_id');
     }
 
     /**
@@ -78,6 +84,7 @@ class Artworks extends Model
      */
     public function reports(): HasMany
     {
-        return $this->hasMany(Reports::class);
+        // Tambahkan 'artwork_id'
+        return $this->hasMany(Reports::class, 'artwork_id');
     }
 }

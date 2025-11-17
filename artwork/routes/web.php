@@ -33,7 +33,11 @@ use App\Http\Controllers\Curator\SubmissionController as CuratorSubmissionContro
 | Rute Publik (Bisa diakses Guest)
 |--------------------------------------------------------------------------
 */
-Route::get('/', [ExploreController::class, 'index'])->name('explore');
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
+
+Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 Route::get('/artwork/{id}', [ArtworkDetailController::class, 'show'])->name('artworks.show');
 Route::get('/creator/{id}', [CreatorProfileController::class, 'show'])->name('profile.show');
 Route::get('/challenges', [ChallengeController::class, 'index'])->name('challenges.index');
