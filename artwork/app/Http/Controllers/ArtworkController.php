@@ -46,7 +46,7 @@ class ArtworkController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'nullable|exists:categories,id',
             'tags' => 'nullable|string|max:255',
             'artwork_file' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB Max
         ]);

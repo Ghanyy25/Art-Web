@@ -30,11 +30,31 @@
                             </div>
                         </div>
 
-                        <p class="text-sm text-gray-700 mb-4 whitespace-pre-wrap">{{ $artwork->description }}</p>
+                        <div x-data="{ expanded: false }">
+
+                            <p
+                                class="text-sm text-gray-700 mb-2 whitespace-pre-wrap break-words transition-all duration-300"
+                                :class="expanded ? '' : 'line-clamp-6'"
+                            >
+                                {{ $artwork->description }}
+                            </p>
+
+                            {{-- Tampilkan tombol hanya jika deskripsi cukup panjang --}}
+                            @if(Str::length($artwork->description) > 150)
+                                <button
+                                    @click="expanded = !expanded"
+                                    class="text-blue-600 text-xs font-bold hover:underline focus:outline-none"
+                                >
+                                    <span x-show="!expanded">Lihat Selengkapnya</span>
+                                    <span x-show="expanded">Sembunyikan</span>
+                                </button>
+                            @endif
+
+                        </div>
 
                         <div class="mb-6">
                             <span class="inline-block bg-gray-100 text-gray-700 text-xs font-medium px-3 py-1 rounded-full">
-                                {{ $artwork->category->name }}
+                                {{ $artwork->category->name ?? null }}
                             </span>
                             @if($artwork->tags)
                                 <div class="mt-2 space-x-2">

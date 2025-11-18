@@ -31,13 +31,13 @@
 
                         <div>
                             <x-input-label for="description" :value="__('Deskripsi')" />
-                            <textarea id="description" name="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
+                            <textarea id="description" name="description" rows="4" maxlength="500" placeholder="Masukkan deskripsi maksimal 500 karakter..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
                         <div>
                             <x-input-label for="category_id" :value="__('Kategori')" />
-                            <select name="category_id" id="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                            <select name="category_id" id="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" >
                                 <option value="">-- Pilih Kategori --</option>
                                 @isset($categories)
                                     @foreach($categories as $category)
