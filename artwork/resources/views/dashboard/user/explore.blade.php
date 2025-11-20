@@ -19,8 +19,9 @@
                     <div class="flex items-center justify-between px-3 py-2">
                         <div class="flex items-center gap-2">
 
-                            <img src="{{ asset($artwork->user->profile_picture ?? 'images/default.png') }}" class="w-6 h-6 rounded-full" alt="{{ $artwork->user->name }}">
-
+                            <img src="{{ $artwork->user->profile_picture ? Storage::url($artwork->user->profile_picture) : asset('images/Default.png') }}"
+                            alt="{{ $artwork->user->name }}"
+                            class="h-8 w-8 rounded-full object-cover">
                             <span class="text-sm font-medium">{{ $artwork->user->name }}</span>
                         </div>
                         <div class="flex items-center gap-2">

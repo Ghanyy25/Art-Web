@@ -20,7 +20,7 @@
                         </div>
                         <div class="p-4">
                             <h3 class="font-semibold text-lg truncate">{{ $artwork->title }}</h3>
-                            <p class="text-sm text-gray-500 mt-1">{{ Str::limit($artwork->description, 80) }}</p>
+                            <p class="text-sm text-gray-500 mt-1 whitespace-pre-wrap break-words">{{ Str::limit($artwork->description,25) }}</p>
 
                             <div class="mt-3 flex items-center justify-between">
                                 <div class="text-xs text-gray-400">{{ $artwork->created_at->format('d M Y') }}</div>

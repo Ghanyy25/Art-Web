@@ -17,6 +17,7 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ProfileUpdateController;
 
 // Controller Admin
 use App\Http\Controllers\Admin\CategoryController;
@@ -64,6 +65,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/edit', [ProfileUpdateController::class, 'edit'])->name('profile.editprofile');
+    Route::post('/profile/editprofile', [ProfileUpdateController::class, 'update'])->name('profile.store');
 
     // My Artworks (CRUD)
     Route::resource('artworks', ArtworkController::class)->except(['show']);
