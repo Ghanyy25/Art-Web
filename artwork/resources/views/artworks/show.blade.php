@@ -150,7 +150,7 @@
                                 </div>
                             </div>
                         @empty
-                            <p class="text-sm text-gray-500">Belum ada komentar.</p>
+                           <p class="text-sm text-gray-500">Belum ada komentar.</p>
                         @endforelse
                     </div>
                 </div>

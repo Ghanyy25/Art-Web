@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-t-8">
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -17,26 +17,36 @@
     <body class="font-sans antialiased">
 
         @auth
-            <div class="flex min-h-screen bg-gray-100">
+            {{-- Layout untuk User Login (Dashboard) --}}
+            <div class="flex h-screen bg-gray-50 overflow-hidden">
 
+                {{-- Sidebar --}}
                 @include('layouts.navigation')
 
-                <div class="flex-1 flex flex-col h-screen overflow-y-auto">
+                {{-- Main Content Wrapper --}}
+                <div class="flex-1 flex flex-col h-full relative w-full">
 
+                    {{-- Header --}}
                     @isset($header)
-                        <header class="bg-white shadow sticky top-0 z-10">
-                            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        <header class="flex-shrink-0 bg-white border-b border-gray-200 z-30">
+                            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex items-center h-16">
                                 {{ $header }}
                             </div>
                         </header>
                     @endisset
 
-                    <main class="flex-1 p-6">
-                        {{ $slot }}
+                    {{-- Scrollable Content Area --}}
+                    <main class="flex-1 overflow-y-auto bg-gray-100 p-6 scroll-smooth">
+                        {{-- Slot Konten --}}
+                        <div class="max-w-7xl mx-auto">
+                            {{ $slot }}
+                        </div>
                     </main>
+
                 </div>
             </div>
         @else
+            {{-- Layout untuk Tamu (Belum Login) --}}
             <div class="min-h-screen bg-gray-100">
                 @include('layouts.navigation-guest')
 

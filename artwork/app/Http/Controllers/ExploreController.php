@@ -22,7 +22,11 @@ class ExploreController extends Controller
 
         // Filter berdasarkan search (judul)
         if ($request->has('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', 'like', '%' . $request->search . '%')
+            ->orWhere('description', 'like', '%' . $request->search . '%')
+            ->orWhereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
         }
 
         $artworks = $query->latest()->paginate(24); // Tampilkan 24 karya per halaman
