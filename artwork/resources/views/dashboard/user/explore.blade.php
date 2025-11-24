@@ -27,6 +27,7 @@
     <div class="py-0">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
+            {{-- Filter Kategori Dropdown --}}
             <div class="flex justify-start mb-8 px-2 sm:px-0 relative z-30" x-data="{ open: false }">
 
                 <div class="relative inline-block text-left">
@@ -81,6 +82,8 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Cek jika artwork kosong --}}
             @if($artworks->isEmpty())
                 <div class="flex flex-col items-center justify-center py-20 text-center">
                     <div class="bg-gray-100 rounded-full p-6 mb-4">
@@ -97,10 +100,18 @@
                     @endif
                 </div>
             @else
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 px-2 sm:px-0">
+
+                {{-- LAYOUT MASONRY (Pinterest Style) --}}
+                {{-- Menggunakan 'columns' alih-alih 'grid' --}}
+                <div class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 px-2 sm:px-0">
+
                     @foreach($artworks as $artwork)
-                    <div class="relative group rounded-xl overflow-hidden shadow-sm hover:shadow-md bg-white transition-shadow duration-300">
-                        <img src="{{ Storage::url($artwork->file_path) }}" alt="{{ $artwork->title }}" class="w-full h-auto object-cover min-h-[150px]">
+                    {{-- 'break-inside-avoid' mencegah item terpotong antar kolom --}}
+                    {{-- 'mb-4' memberikan jarak vertikal antar item --}}
+                    <div class="break-inside-avoid mb-4 relative group rounded-xl overflow-hidden shadow-sm hover:shadow-md bg-white transition-shadow duration-300">
+
+                        {{-- Hapus 'min-h-[150px]' dan biarkan 'h-auto' agar tinggi mengikuti gambar --}}
+                        <img src="{{ Storage::url($artwork->file_path) }}" alt="{{ $artwork->title }}" class="w-full h-auto object-cover block">
 
                         <a href="{{ route('artworks.show', $artwork->id) }}" class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></a>
 
@@ -132,6 +143,7 @@
                         </div>
                     </div>
                     @endforeach
+
                 </div>
 
                 <div class="mt-10">

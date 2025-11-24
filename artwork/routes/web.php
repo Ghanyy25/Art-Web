@@ -35,8 +35,8 @@ use App\Http\Controllers\Curator\SubmissionController as CuratorSubmissionContro
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+    return redirect()->route('explore');
+});
 
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 Route::get('/artwork/{id}', [ArtworkDetailController::class, 'show'])->name('artworks.show');

@@ -47,20 +47,26 @@
             </div>
         @else
             {{-- Layout untuk Tamu (Belum Login) --}}
-            <div class="min-h-screen bg-gray-100">
+           <div class="flex h-screen bg-gray-100 overflow-hidden">
+
+                {{-- Sidebar Guest --}}
                 @include('layouts.navigation-guest')
 
-                @isset($header)
-                    <header class="bg-white shadow">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            {{ $header }}
-                        </div>
-                    </header>
-                @endisset
+                {{-- Wrapper Konten Utama (Kanan) --}}
+                <div class="flex-1 flex flex-col h-full relative w-full overflow-y-auto">
 
-                <main>
-                    {{ $slot }}
-                </main>
+                    @isset($header)
+                        <header class="flex-shrink-0 bg-white border-b border-gray-200 z-30">
+                            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex items-center h-16">
+                                {{ $header }}
+                            </div>
+                        </header>
+                    @endisset
+
+                    <main class="flex-1 p-6">
+                        {{ $slot }}
+                    </main>
+                </div>
             </div>
         @endauth
 
