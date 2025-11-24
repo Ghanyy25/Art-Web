@@ -16,7 +16,7 @@
                             <div class="border rounded-lg p-4 bg-gray-50 flex flex-col md:flex-row gap-4">
                                 <div class="flex-1">
                                     <h3 class="font-bold text-red-600 mb-1">Report Reason: {{ $report->reason }}</h3>
-                                    <p class="text-sm text-gray-600 mb-2">Reported by: {{ $report->user->name }}</p>
+                                    <p class="text-sm text-gray-600 mb-2">Reported by: {{ $report->reporteruser->name }}</p>
                                     <div class="bg-white p-3 border rounded">
                                         <p class="font-semibold">Content: {{ $report->artwork->title }}</p>
                                         <p class="text-xs text-gray-500">Creator: {{ $report->artwork->user->name }}</p>

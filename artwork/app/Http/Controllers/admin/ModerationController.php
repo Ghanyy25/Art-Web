@@ -16,7 +16,7 @@ class ModerationController extends Controller
     public function index()
     {
         $reports = Reports::where('status', 'pending')
-                          ->with(['artwork.user', 'reporter']) // Eager load relasi
+                          ->with(['artwork.user', 'reporteruser']) // Eager load relasi
                           ->latest()
                           ->paginate(15);
 

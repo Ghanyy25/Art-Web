@@ -16,9 +16,12 @@
             <x-nav-link-vertical :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.index')">
                 Manajemen Kategori
             </x-nav-link-vertical>
-            {{-- <x-nav-link-vertical :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
+            <x-nav-link-vertical :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
                 Manajemen User
-            </x-nav-link-vertical> --}}
+            </x-nav-link-vertical>
+            <x-nav-link-vertical :href="route('admin.moderation.index')" :active="request()->routeIs('admin.moderation.index')">
+                Moderasi
+            </x-nav-link-vertical>
 
         @elseif(Auth::user()->role == 'curator')
 
