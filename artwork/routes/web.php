@@ -50,7 +50,9 @@ Route::get('/challenge/{slug}', [ChallengeController::class, 'show'])->name('cha
 |--------------------------------------------------------------------------
 */
 // Dashboard (akan diarahkan oleh HomeController)
-Route::get('/dashboard', [HomeController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [HomeController::class,'index'])
+    ->middleware(['auth', 'verified', 'curator.status']) // Tambahkan di sini
+    ->name('dashboard');
 
 require __DIR__.'/auth.php';
 
@@ -122,3 +124,12 @@ Route::middleware(['auth', 'verified', 'curator'])->prefix('curator')->name('cur
     Route::get('/submissions/challenge/{challengeId}', [CuratorSubmissionController::class, 'index'])->name('submissions.index');
     Route::post('/submissions/winner/{submissionId}', [CuratorSubmissionController::class, 'selectWinner'])->name('submissions.selectWinner');
 });
+
+// Route khusus untuk halaman "Menunggu Persetujuan"
+Route::get('/curator/pending', function () {
+    // Pastikan hanya curator pending yang bisa akses ini
+    if (auth()->user()->role === 'curator' && auth()->user()->status === 'active') {
+        return redirect()->route('dashboard');
+    }
+    return view('dashboard.curator.pending'); // File view yang sudah Anda punya
+})->middleware(['auth'])->name('curator.pending');

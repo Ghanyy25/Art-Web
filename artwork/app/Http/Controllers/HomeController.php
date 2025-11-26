@@ -9,20 +9,20 @@ class HomeController extends Controller
 {
     public function index()
     {
-        if (Auth::check()) {
+        $user = auth()->user();
 
-            if (Auth::user()->role == 'admin') {
-                return view('dashboard.admin.home');
+        if ($user->role === 'admin') {
+            return view('dashboard.admin.home');
+        }
 
-            }else if(Auth::user()->role == 'curator'){
-                return view('dashboard.curator.home');
-
-            } else {
-                return view('dashboard.user.home');
+        if ($user->role === 'curator') {
+            // Tambahan Cek Status
+            if ($user->status === 'pending') {
+                return redirect()->route('curator.pending');
             }
+            return view('dashboard.curator.home');
+        }
 
-        } else {
-            return redirect()->route('login');}
-
+        return view('dashboard.user.home');
     }
 }

@@ -3,14 +3,13 @@
 
         <div class="hidden lg:flex w-1/2 bg-gray-900 relative items-center justify-center">
             <div class="absolute inset-0 overflow-hidden">
-                {{-- Gambar yang berbeda untuk Register --}}
                 <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=2071&auto=format&fit=crop"
                      alt="Art Background Register"
                      class="w-full h-full object-cover opacity-60">
             </div>
             <div class="relative z-10 px-10 text-center">
                 <h2 class="text-4xl font-bold text-white tracking-tight mb-2">Bergabung dengan Komunitas</h2>
-                <p class="text-gray-300 text-lg">Tunjukkan karya Anda, apresiasi seni, dan terhubung dengan kreator lain.</p>
+                <p class="text-gray-300 text-lg">Tunjukkan karya Anda atau jadilah kurator untuk menemukan bakat baru.</p>
             </div>
         </div>
 
@@ -23,7 +22,7 @@
                 Kembali ke Explore
             </a>
 
-            <div class="w-full max-w-md space-y-8">
+            <div class="w-full max-w-md space-y-6">
                 <div class="text-center lg:text-left">
                     <a href="{{ route('explore') }}" class="flex justify-center lg:justify-start">
                         <x-application-logo class="w-12 h-12 fill-current text-gray-900" />
@@ -37,30 +36,42 @@
                     </p>
                 </div>
 
-                <form method="POST" action="{{ route('register') }}" class="mt-8 space-y-5">
+                <form method="POST" action="{{ route('register') }}" class="mt-8 space-y-4">
                     @csrf
 
                     <div>
+                        <x-input-label for="role" :value="__('Daftar Sebagai')" />
+                        <select id="role" name="role" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <option value="member">Member (Seniman / Penikmat Seni)</option>
+                            <option value="curator">Curator (Penilai & Pembuat Challenge)</option>
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">
+                            *Akun Curator memerlukan persetujuan Admin sebelum bisa digunakan.
+                        </p>
+                        <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                    </div>
+
+                    <div>
                         <x-input-label for="name" :value="__('Nama Lengkap')" />
-                        <x-text-input id="name" class="block mt-1 w-full rounded-lg" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Seniman Keren" />
+                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
 
                     <div>
                         <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" class="block mt-1 w-full rounded-lg" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="nama@email.com" />
+                        <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 
                     <div>
                         <x-input-label for="password" :value="__('Password')" />
-                        <x-text-input id="password" class="block mt-1 w-full rounded-lg" type="password" name="password" required autocomplete="new-password" placeholder="Minimal 8 karakter" />
+                        <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
 
                     <div>
                         <x-input-label for="password_confirmation" :value="__('Konfirmasi Password')" />
-                        <x-text-input id="password_confirmation" class="block mt-1 w-full rounded-lg" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="Ulangi password" />
+                        <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                     </div>
 
