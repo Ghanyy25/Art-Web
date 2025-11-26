@@ -66,15 +66,15 @@
                     >
                         <div class="py-1" role="none">
                             <a href="{{ route('explore', ['search' => request('search')]) }}"
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ !request('category') ? 'bg-gray-100 font-semibold' : '' }}"
-                               role="menuitem">
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ !request('category') ? 'bg-gray-100 font-semibold' : '' }}"
+                                role="menuitem">
                                 Semua Kategori
                             </a>
 
                             @foreach($categories as $category)
                                 <a href="{{ route('explore', ['category' => $category->slug, 'search' => request('search')]) }}"
-                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ request('category') == $category->slug ? 'bg-gray-100 font-semibold' : '' }}"
-                                   role="menuitem">
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 {{ request('category') == $category->slug ? 'bg-gray-100 font-semibold' : '' }}"
+                                    role="menuitem">
                                     {{ $category->name }}
                                 </a>
                             @endforeach

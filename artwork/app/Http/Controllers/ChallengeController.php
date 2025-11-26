@@ -11,15 +11,40 @@ class ChallengeController extends Controller
     /**
      * Menampilkan daftar challenge yang sedang berlangsung (public).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $activeChallenges = Challenges::where('end_date', '>', Carbon::now())
-                                     ->latest()
-                                     ->paginate(10);
+        $query = Challenges::query();
 
-        return view('challenges.index', compact('activeChallenges'));
+        // --- 1. Logika Filter (Status) ---
+        // Default ke 'active' (Berlangsung) agar user melihat yang relevan dulu
+        // Tapi jika user klik 'Semua', filter akan berisi 'all'
+        $filter = $request->input('filter', 'active');
+
+        if ($filter === 'active') {
+            // HANYA yang sedang berjalan
+            $query->where('end_date', '>', Carbon::now());
+        } elseif ($filter === 'ended') {
+            // HANYA yang sudah selesai
+            $query->where('end_date', '<=', Carbon::now());
+        }
+        // Jika filter === 'all', kita TIDAK menambahkan where date (ambil semua)
+
+        // --- 2. Logika Search ---
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+
+        // --- 3. Eksekusi ---
+        $challenges = $query->latest() // Urutkan dari yang terbaru dibuat
+                            ->paginate(12)
+                            ->withQueryString();
+
+        return view('challenges.index', compact('challenges', 'filter'));
     }
-
     /**
      * Menampilkan halaman detail challenge (public).
      */
