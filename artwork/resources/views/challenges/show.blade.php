@@ -26,6 +26,10 @@
                         <span class="px-4 py-1.5 rounded-full bg-green-500/80 backdrop-blur text-white text-sm font-bold shadow-lg uppercase tracking-wider">
                             Sedang Berlangsung
                         </span>
+                    @elseif ($challenge->start_date >now())
+                        <span class="px-4 py-1.5 rounded-full bg-yellow-500/80 backdrop-blur text-white text-sm font-bold shadow-lg uppercase tracking-wider">
+                            Akan Datang
+                        </span>
                     @else
                         <span class="px-4 py-1.5 rounded-full bg-red-500/80 backdrop-blur text-white text-sm font-bold shadow-lg uppercase tracking-wider">
                             Selesai
@@ -198,6 +202,10 @@
                                        class="block w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-md transition transform hover:-translate-y-0.5">
                                         Upload Karya Sekarang
                                     </a>
+                                @elseif($challenge->start_date > now())
+                                    <div class="bg-yellow-50 p-3 rounded-lg text-yellow-700 text-sm">
+                                        <i class="fas fa-clock mr-1"></i> Challenge Belum Dimulai
+                                    </div>
                                 @else
                                     <div class="bg-gray-100 p-3 rounded-lg text-gray-500 text-sm font-medium">
                                         <i class="fas fa-lock mr-1"></i> Challenge Telah Berakhir

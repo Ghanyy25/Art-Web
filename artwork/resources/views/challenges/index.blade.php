@@ -42,6 +42,12 @@
                         Sedang Berlangsung
                     </a>
 
+                    {{-- Tombol AKAN DATANG --}}
+                    <a href="{{ route('challenges.index', ['filter' => 'upcoming', 'search' => request('search')]) }}"
+                        class="px-6 py-2 rounded-lg text-sm font-medium transition-all {{ $filter === 'upcoming' ? 'bg-indigo-50 text-indigo-700 shadow-sm ring-1 ring-indigo-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
+                        Akan Datang
+                    </a>
+
                     {{-- Tombol SELESAI --}}
                     <a href="{{ route('challenges.index', ['filter' => 'ended', 'search' => request('search')]) }}"
                         class="px-6 py-2 rounded-lg text-sm font-medium transition-all {{ $filter === 'ended' ? 'bg-indigo-50 text-indigo-700 shadow-sm ring-1 ring-indigo-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
@@ -85,9 +91,13 @@
 
                                 {{-- Badge Status --}}
                                 <div class="absolute top-3 right-3">
-                                    @if($challenge->end_date > now())
+                                    @if($challenge->end_date> now() and $challenge->start_date <= now())
                                         <span class="px-3 py-1 text-xs font-bold text-white bg-green-500/90 backdrop-blur-sm rounded-full shadow-sm">
                                             Berlangsung
+                                        </span>
+                                    @elseif($challenge->start_date > now())
+                                        <span class="px-3 py-1 text-xs font-bold text-white bg-blue-600/90 backdrop-blur-sm rounded-full shadow-sm">
+                                            Akan Datang
                                         </span>
                                     @else
                                         <span class="px-3 py-1 text-xs font-bold text-white bg-gray-600/90 backdrop-blur-sm rounded-full shadow-sm">
@@ -110,7 +120,7 @@
                                     <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
                                         <div class="flex items-center" title="Batas Waktu">
                                             <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                            {{ $challenge->end_date->format('d M Y') }}
+                                            {{ $challenge->end_date->format('d M Y h:m') }}
                                         </div>
                                         <div class="flex items-center" title="Jumlah Partisipan">
                                             <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -118,9 +128,19 @@
                                         </div>
                                     </div>
 
-                                    <a href="{{ route('challenges.show', $challenge->slug) }}" class="block w-full text-center px-4 py-2.5 bg-gray-900 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-600 focus:bg-indigo-600 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                        Lihat Detail
-                                    </a>
+                                    @if($challenge->start_date > now())
+        {{-- KONDISI 1: AKAN DATANG (Belum Mulai) --}}
+        {{-- Tombol dimatikan (Disabled) agar tidak bisa diklik --}}
+        <button type="button" disabled class="block w-full text-center px-4 py-2.5 bg-gray-300 border border-transparent rounded-lg font-semibold text-xs text-gray-500 uppercase tracking-widest cursor-not-allowed">
+            <i class="fas fa-lock mr-1"></i> Belum Dibuka
+        </button>
+    @else
+        {{-- KONDISI 2: SEDANG BERLANGSUNG / SELESAI --}}
+        {{-- Tombol Normal (Bisa diklik) --}}
+        <a href="{{ route('challenges.show', $challenge->slug) }}" class="block w-full text-center px-4 py-2.5 bg-gray-900 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-600 focus:bg-indigo-600 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+            Lihat Detail
+        </a>
+    @endif
                                 </div>
                             </div>
                         </div>

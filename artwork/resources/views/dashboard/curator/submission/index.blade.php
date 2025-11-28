@@ -1,6 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+        <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 w-full">
+            {{-- Judul Halaman --}}
             <div>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     {{ __('Kelola Submisi & Pemenang') }}

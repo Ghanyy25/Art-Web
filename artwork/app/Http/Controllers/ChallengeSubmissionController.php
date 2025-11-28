@@ -14,19 +14,23 @@ class ChallengeSubmissionController extends Controller
      * Member memilih dari karya yang sudah mereka upload.
      */
     public function create($challengeId)
-    {
-        $challenge = Challenges::where('end_date', '>', now())->findOrFail($challengeId);
+{
+    $challenge = Challenges::find($challengeId);
 
-        // Ambil karya milik user yang BELUM pernah di-submit ke challenge ini
-        $userArtworks = Auth::user()->artworks()
-            ->whereDoesntHave('challengeSubmissions', function ($query) use ($challengeId) {
-                $query->where('challenge_id', $challengeId);
-            })
-            ->latest()
-            ->get();
-
-        return view('dashboard.user.submission.submit', compact('challenge', 'userArtworks'));
+    if (!$challenge || $challenge->end_date <= now()) {
+        return redirect()
+            ->route('challenges.show', $challenge?->slug ?? $challengeId)
+            ->with('error', 'Maaf, challenge ini sudah berakhir. Submission ditutup.');
     }
+
+    $userArtworks = Auth::user()->artworks()
+        ->whereDoesntHave('challengeSubmissions', function ($q) use ($challengeId) {
+            $q->where('challenge_id', $challengeId);
+        })
+        ->get();
+
+    return view('dashboard.user.submission.submit', compact('challenge', 'userArtworks'));
+}
 
     /**
      * Menyimpan submisi karya ke challenge.
@@ -51,7 +55,7 @@ class ChallengeSubmissionController extends Controller
         if ($isSubmitted) {
             return redirect()->back()->with('error', 'Karya ini sudah pernah Anda submit ke challenge ini.');
         }
-        
+
         ChallengeSubmission::create([
             'challenge_id' => $challengeId,
             'artwork_id' => $artwork->id,

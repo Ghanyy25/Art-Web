@@ -21,8 +21,12 @@ class ChallengeController extends Controller
         $filter = $request->input('filter', 'active');
 
         if ($filter === 'active') {
-            // HANYA yang sedang berjalan
-            $query->where('end_date', '>', Carbon::now());
+        // Logic: Waktu Mulai <= Sekarang DAN Waktu Selesai > Sekarang
+        $query->where('start_date', '<=', Carbon::now())
+              ->where('end_date', '>', Carbon::now());
+        } elseif ($filter === 'upcoming') {
+            // HANYA yang akan datang
+            $query->where('start_date', '>', Carbon::now());
         } elseif ($filter === 'ended') {
             // HANYA yang sudah selesai
             $query->where('end_date', '<=', Carbon::now());
@@ -67,5 +71,5 @@ class ChallengeController extends Controller
         return view('challenges.show', compact('challenge', 'submissions', 'winners'));
     }
 
-   
+
 }
