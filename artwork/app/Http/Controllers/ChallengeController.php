@@ -66,4 +66,6 @@ class ChallengeController extends Controller
 
         return view('challenges.show', compact('challenge', 'submissions', 'winners'));
     }
+
+   
 }

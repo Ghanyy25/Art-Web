@@ -11,6 +11,7 @@ class Challenges extends Model
     protected $fillable = [
         'curator_id',
         'title',
+        'slug',
         'description',
         'rules',
         'prizes',
@@ -24,6 +25,7 @@ class Challenges extends Model
         return [
             'start_date' => 'datetime',
             'end_date' => 'datetime',
+            'prizes'     => 'array',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
@@ -42,6 +44,6 @@ class Challenges extends Model
      */
     public function submissions(): HasMany
     {
-        return $this->hasMany(ChallengeSubmission::class);
+        return $this->hasMany(ChallengeSubmission::class, 'challenge_id');
     }
 }

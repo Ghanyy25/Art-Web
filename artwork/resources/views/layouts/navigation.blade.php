@@ -31,6 +31,7 @@
             <x-nav-link-vertical :href="route('curator.challenges.index')" :active="request()->routeIs('curator.challenges.index')">
                 Manajemen Challenge
             </x-nav-link-vertical>
+            
 
         @else
 
@@ -40,6 +41,9 @@
             <x-nav-link-vertical :href="route('explore')" :active="request()->routeIs('explore')">
                 {{ __('Explore') }}
             </x-nav-link-vertical>
+            <x-nav-link-vertical :href="route('challenges.index')" :active="request()->routeIs('challenges.index')">
+            {{ __('Challenges') }}
+        </x-nav-link-vertical>
             <x-nav-link-vertical :href="route('artworks.index')" :active="request()->routeIs('artworks.index')">
                 My Artworks
             </x-nav-link-vertical>

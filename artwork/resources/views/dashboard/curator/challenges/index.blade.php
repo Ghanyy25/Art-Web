@@ -25,7 +25,7 @@
                     <tbody class="divide-y divide-gray-200">
                         @foreach($challenges as $challenge)
                             <tr>
-                                <td class="px-6 py-4 font-medium">{{ $challenge->title }}</td>
+                                <td class="px-6 py-4 font-medium"><a href="{{ route('curator.challenges.show', $challenge->id) }}">{{$challenge->title }} </a></td>
                                 <td class="px-6 py-4 text-sm text-gray-500">
                                     {{ $challenge->start_date }} to {{ $challenge->end_date }}
                                 </td>

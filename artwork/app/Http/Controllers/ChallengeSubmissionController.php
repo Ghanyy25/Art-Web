@@ -25,7 +25,7 @@ class ChallengeSubmissionController extends Controller
             ->latest()
             ->get();
 
-        return view('challenges.submit', compact('challenge', 'userArtworks'));
+        return view('dashboard.user.submission.submit', compact('challenge', 'userArtworks'));
     }
 
     /**
@@ -45,13 +45,13 @@ class ChallengeSubmissionController extends Controller
 
         // Cek duplikasi
         $isSubmitted = ChallengeSubmission::where('challenge_id', $challengeId)
-                                          ->where('artwork_id', $artwork->id)
-                                          ->exists();
+                                            ->where('artwork_id', $artwork->id)
+                                            ->exists();
 
         if ($isSubmitted) {
             return redirect()->back()->with('error', 'Karya ini sudah pernah Anda submit ke challenge ini.');
         }
-
+        
         ChallengeSubmission::create([
             'challenge_id' => $challengeId,
             'artwork_id' => $artwork->id,
