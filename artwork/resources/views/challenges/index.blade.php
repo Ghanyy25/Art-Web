@@ -1,7 +1,7 @@
 <x-app-layout>
     {{-- 1. SEARCH BAR DI HEADER (Gaya Explore) --}}
     <x-slot name="header">
-        <div class="flex justify-center w-full py-2">
+        <div class="flex justify-center w-full py-0">
             <form method="GET" action="{{ route('challenges.index') }}" class="w-full max-w-3xl">
                 {{-- Simpan filter saat ini agar tidak hilang saat mencari --}}
                 <input type="hidden" name="filter" value="{{ request('filter', 'active') }}">
@@ -25,10 +25,10 @@
     </x-slot>
 
     <div class="py-0">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-0">
 
             {{-- 2. FILTER TOMBOL (Di Bagian Atas Konten) --}}
-            <div class="flex flex-col items-center mb-8">
+            <div class="flex flex-col items-center mb-5">
                 <div class="bg-white p-1 rounded-xl shadow-sm border border-gray-200 inline-flex">
                     {{-- Tombol SEMUA --}}
                     <a href="{{ route('challenges.index', ['filter' => 'all', 'search' => request('search')]) }}"
@@ -75,7 +75,7 @@
                     @endif
                 </div>
             @else
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-0">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-0 sm:px-0">
                     @foreach($challenges as $challenge)
                         <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col h-full group">
 

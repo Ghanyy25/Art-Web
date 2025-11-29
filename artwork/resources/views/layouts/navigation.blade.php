@@ -25,13 +25,10 @@
 
         @elseif(Auth::user()->role == 'curator')
 
-            <x-nav-link-vertical :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Curator Dashboard') }}
-            </x-nav-link-vertical>
             <x-nav-link-vertical :href="route('curator.challenges.index')" :active="request()->routeIs('curator.challenges.index')">
                 Manajemen Challenge
             </x-nav-link-vertical>
-            
+
 
         @else
 

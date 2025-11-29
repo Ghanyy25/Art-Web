@@ -25,10 +25,10 @@
     </x-slot>
 
     <div class="py-0">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-0">
 
             {{-- Filter Kategori Dropdown --}}
-            <div class="flex justify-start mb-8 px-2 sm:px-0 relative z-30" x-data="{ open: false }">
+            <div class="flex justify-start mb-5 px-1 sm:px-0 relative z-30" x-data="{ open: false }">
 
                 <div class="relative inline-block text-left">
                     <button
