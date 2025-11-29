@@ -38,7 +38,10 @@ class ChallengeController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%');
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->orWhereHas('curator', function ($q2) use ($search) {
+                      $q2->where('name', 'like', '%' . $search . '%');
+                  });
             });
         }
 

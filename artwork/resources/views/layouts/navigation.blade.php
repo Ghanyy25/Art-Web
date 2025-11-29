@@ -53,7 +53,19 @@
 
     <div class="p-4 border-t flex items-center justify-between" x-data="{ confirmLogout: false }">
         {{-- 1. Link Profil (Kiri) --}}
-        <a href="{{ route('profile.show', ['id' => Auth::id()]) }}"
+        @php
+            $profileRoute = '#';
+            if(Auth::user()->role == 'curator') {
+                // Jika Curator, arahkan ke Profil Publik Kurator
+                $profileRoute = route('curator.profile.public', Auth::id());
+            } elseif(Auth::user()->role == 'member') {
+                // Jika Member biasa, arahkan ke Profil Creator
+                $profileRoute = route('profile.show', Auth::id());
+            } 
+        @endphp
+
+    {{-- 1. Link Profil (Kiri) --}}
+        <a href="{{ $profileRoute }}"
         class="flex items-center flex-1 min-w-0 p-2 mr-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-800 hover:bg-gray-50 transition ease-in-out duration-150">
 
             <img class="h-8 w-8 rounded-full object-cover mr-2 flex-shrink-0"

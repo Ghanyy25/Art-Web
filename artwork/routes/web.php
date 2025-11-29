@@ -27,7 +27,7 @@ use App\Http\Controllers\Admin\ModerationController;
 // Controller Curator
 use App\Http\Controllers\Curator\ChallengeController as CuratorChallengeController;
 use App\Http\Controllers\Curator\SubmissionController as CuratorSubmissionController;
-
+use App\Http\Controllers\CuratorProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +43,7 @@ Route::get('/artwork/{id}', [ArtworkDetailController::class, 'show'])->name('art
 Route::get('/creator/{id}', [CreatorProfileController::class, 'show'])->name('profile.show');
 Route::get('/challenges', [ChallengeController::class, 'index'])->name('challenges.index');
 Route::get('/challenge/{slug}', [ChallengeController::class, 'show'])->name('challenges.show');
+Route::get('/curator/{id}/profile', [CuratorProfileController::class, 'show'])->name('curator.profile.public');
 
 /*
 |--------------------------------------------------------------------------

@@ -52,7 +52,7 @@
                     </div>
                     <div class="flex items-center justify-center bg-white/10 backdrop-blur rounded-lg px-4 py-2">
                         <i class="fas fa-user-edit mr-2 text-blue-400"></i>
-                        <span>Curator: {{ $challenge->curator->name }}</span>
+                        <a href="{{route('curator.profile.public',$challenge->curator->id)}}">Curator: {{ $challenge->curator->name }}</a>
                     </div>
                 </div>
             </div>
