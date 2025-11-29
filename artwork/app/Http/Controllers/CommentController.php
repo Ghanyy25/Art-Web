@@ -20,13 +20,23 @@ class CommentController extends Controller
             'body' => 'required|string|max:1000',
         ]);
 
-        Comments::create([
+        $comment = Comments::create([
             'user_id' => Auth::id(),
             'artwork_id' => $artworkId,
             'body' => $request->body,
         ]);
 
-        return redirect()->back()->with('success', 'Komentar berhasil ditambahkan.');
+        // Load data user agar avatar & nama muncul di JS
+        $comment->load('user');
+
+        // RETURN JSON (Wajib untuk Axios)
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Komentar berhasil ditambahkan',
+            'data' => $comment,
+            'user_avatar' => $comment->user->profile_picture ? \Storage::url($comment->user->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode($comment->user->name),
+            'user_name' => $comment->user->name
+        ]);
     }
 
     /**

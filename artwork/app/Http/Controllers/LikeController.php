@@ -12,24 +12,35 @@ class LikeController extends Controller
     /**
      * Handle like/unlike (toggle)
      */
-    public function toggle($artworkId)
+    public function toggle(Request $request, $artwork_id)
     {
-        $artwork = Artworks::findOrFail($artworkId);
-        $userId = Auth::id();
+        $artwork = Artworks::findOrFail($artwork_id);
+        $user = auth()->user();
 
-        $like = Likes::where('artwork_id', $artworkId)->where('user_id', $userId)->first();
+        // Cek apakah user sudah like
+        $existingLike = Likes::where('user_id', $user->id)
+                            ->where('artwork_id', $artwork->id)
+                            ->first();
 
-        if ($like) {
-            // Jika sudah like, maka unlike
-            $like->delete();
+        if ($existingLike) {
+            $existingLike->delete();
+            $isLiked = false;
         } else {
-            // Jika belum like, maka like
             Likes::create([
-                'artwork_id' => $artworkId,
-                'user_id' => $userId,
+                'user_id' => $user->id,
+                'artwork_id' => $artwork->id
             ]);
+            $isLiked = true;
         }
 
-        return redirect()->back(); // Kembali ke halaman sebelumnya
+        // Hitung total like terbaru
+        $likeCount = $artwork->likes()->count();
+
+        // PENTING: Return JSON, bukan redirect!
+        return response()->json([
+            'status' => 'success',
+            'is_liked' => $isLiked,
+            'likes_count' => $likeCount,
+        ]);
     }
 }

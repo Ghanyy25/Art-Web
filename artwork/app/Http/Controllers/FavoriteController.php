@@ -12,25 +12,37 @@ class FavoriteController extends Controller
     /**
      * Handle save/unsave (toggle)
      */
-    public function toggle($artworkId)
+    public function toggle($artwork_id)
     {
-        $artwork = Artworks::findOrFail($artworkId);
-        $userId = Auth::id();
+        $user = Auth::user();
+        $artwork = Artworks::findOrFail($artwork_id);
 
-        $favorite = Favorites::where('artwork_id', $artworkId)->where('user_id', $userId)->first();
+        // Cek apakah user sudah memfavoritkan karya ini
+        $existingFavorite = Favorites::where('user_id', $user->id)
+                                     ->where('artwork_id', $artwork->id)
+                                     ->first();
 
-        if ($favorite) {
-            // Jika sudah save, maka unsave
-            $favorite->delete();
+        if ($existingFavorite) {
+            // Jika sudah ada, hapus (Un-favorite)
+            $existingFavorite->delete();
+            $isFavorited = false;
+            $message = 'Berhasil dihapus dari favorit.';
         } else {
-            // Jika belum save, maka save
+            // Jika belum ada, buat baru (Favorite)
             Favorites::create([
-                'artwork_id' => $artworkId,
-                'user_id' => $userId,
+                'user_id' => $user->id,
+                'artwork_id' => $artwork->id
             ]);
+            $isFavorited = true;
+            $message = 'Berhasil ditambahkan ke favorit.';
         }
 
-        return redirect()->back();
+        // Return JSON Response untuk AJAX
+        return response()->json([
+            'status' => 'success',
+            'message' => $message,
+            'is_favorited' => $isFavorited,
+        ]);
     }
 
     /**
