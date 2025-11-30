@@ -51,8 +51,6 @@ class UserController extends Controller
         }
 
         // Hapus file profile picture jika ada
-        // Storage::disk('public')->delete($user->profile_picture);
-
         $user->delete();
 
         return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil dihapus.');

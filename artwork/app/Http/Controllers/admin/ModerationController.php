@@ -38,7 +38,6 @@ class ModerationController extends Controller
             $artwork = Artworks::find($report->artwork_id);
             if ($artwork) {
                 // Hapus Artwork (file gambar + data)
-                // Opsional: Storage::disk('public')->delete($artwork->file_path);
                 $artwork->delete();
             }
         } elseif ($report->comment_id) {

@@ -115,7 +115,7 @@
                                 <p class="text-gray-500 mt-1">Jadilah yang pertama mengirimkan karya untuk challenge ini!</p>
                             </div>
                         @else
-                            {{-- MASONRY GRID (Sama seperti Explore) --}}
+                            {{-- MASONRY GRID --}}
                             <div class="columns-2 sm:columns-3 gap-4 space-y-4">
                                 @foreach($submissions as $submission)
                                     <div class="break-inside-avoid mb-4 relative group rounded-xl overflow-hidden shadow-sm hover:shadow-md bg-white transition-shadow duration-300 border border-gray-100">
@@ -201,11 +201,9 @@
             {{-- Grid Podium --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end justify-center">
                 @foreach($winners as $winner)
-                    {{-- Logika Tampilan: Juara 1 di Tengah (Order 2), Juara 2 di Kiri (Order 1), Juara 3 di Kanan (Order 3) --}}
+                    {{-- Logika Tampilan --}}
                     <div class="relative flex flex-col items-center
                         {{ $winner->placement == 1 ? 'order-first md:order-2 scale-105 z-10' : ($winner->placement == 2 ? 'md:order-1' : 'md:order-3') }}">
-
-                        
 
                         {{-- Card Artwork Pemenang --}}
                         <div class="group relative w-full bg-white rounded-xl shadow-lg overflow-hidden border-2
@@ -256,8 +254,6 @@
                                         <span class="font-semibold text-red-500">{{ $challenge->end_date->format('d M Y, H:i') }}</span>
                                     </p>
 
-                                    {{-- Cek apakah user sudah submit (Opsional, perlu pass variable $hasSubmitted dari controller) --}}
-                                    {{-- Untuk saat ini kita arahkan saja, nanti di controller submit akan dicek lagi --}}
                                     @if ($existingSubmission)
                                         <div class="bg-green-50 p-3 rounded-lg text-green-700 text-sm font-medium">
                                             <i class="fas fa-check-circle mr-1"></i> Anda sudah mengirimkan karya untuk challenge ini.

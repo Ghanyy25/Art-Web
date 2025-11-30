@@ -18,8 +18,6 @@ class ChallengeController extends Controller
         $query = Challenges::query();
 
         // --- 1. Logika Filter (Status) ---
-        // Default ke 'active' (Berlangsung) agar user melihat yang relevan dulu
-        // Tapi jika user klik 'Semua', filter akan berisi 'all'
         $filter = $request->input('filter', 'active');
 
         if ($filter === 'active') {
@@ -33,8 +31,7 @@ class ChallengeController extends Controller
             // HANYA yang sudah selesai
             $query->where('end_date', '<=', Carbon::now());
         }
-        // Jika filter === 'all', kita TIDAK menambahkan where date (ambil semua)
-
+        
         // --- 2. Logika Search ---
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -51,6 +48,8 @@ class ChallengeController extends Controller
         $challenges = $query->latest() // Urutkan dari yang terbaru dibuat
                             ->paginate(12)
                             ->withQueryString();
+
+
 
         return view('challenges.index', compact('challenges', 'filter'));
     }

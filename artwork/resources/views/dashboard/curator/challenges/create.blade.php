@@ -51,18 +51,14 @@
                         <div class="space-y-3 bg-gray-50 p-4 rounded-lg border border-gray-200">
                             <p class="text-sm font-medium text-gray-700 mb-2">Masukkan Detail Hadiah:</p>
 
-                            {{-- Loop Input Sesuai Jumlah Pemenang --}}
-                            {{-- Loop Input Sesuai Jumlah Pemenang --}}
                             <template x-for="i in parseInt(winnerCount)" :key="i">
                                 <div class="mt-3">
-                                    {{-- Gunakan label HTML biasa, bukan x-input-label --}}
                                     <label
                                         class="block font-medium text-sm text-gray-700"
                                         :for="'prize_'+i"
                                         x-text="'Hadiah Juara ' + i">
                                     </label>
 
-                                    {{-- Gunakan input HTML biasa, bukan x-text-input --}}
                                     <input
                                         :id="'prize_'+i"
                                         class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"

@@ -33,10 +33,8 @@ class LikeController extends Controller
             $isLiked = true;
         }
 
-        // Hitung total like terbaru
         $likeCount = $artwork->likes()->count();
 
-        // PENTING: Return JSON, bukan redirect!
         return response()->json([
             'status' => 'success',
             'is_liked' => $isLiked,

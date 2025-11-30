@@ -51,7 +51,7 @@ class FavoriteController extends Controller
      public function index()
      {
          $favorites = Favorites::where('user_id', Auth::id())
-                                ->with('artwork.user') // Ambil juga data artwork & kreatornya
+                                ->with('artwork.user') 
                                 ->latest()
                                 ->paginate(20);
 

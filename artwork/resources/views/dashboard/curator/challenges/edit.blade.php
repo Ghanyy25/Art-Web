@@ -12,12 +12,11 @@
                 {{-- Form Update ke route 'update' dengan ID challenge --}}
                 <form action="{{ route('curator.challenges.update', $challenge->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('PUT') {{-- PENTING: Untuk update data --}}
+                    @method('PUT')
 
                     {{-- 1. JUDUL --}}
                     <div class="mb-4">
                         <x-input-label for="title" :value="__('Judul Challenge')" />
-                        {{-- Value diambil dari old input (jika gagal validasi) ATAU data database ($challenge->title) --}}
                         <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title', $challenge->title)" required />
                         <x-input-error :messages="$errors->get('title')" class="mt-2" />
                     </div>
@@ -37,7 +36,6 @@
                     </div>
 
                     {{-- 4. HADIAH (PRIZES) - EDIT --}}
-                    {{-- Inisialisasi winnerCount dengan jumlah data yang ada di database --}}
                     <div class="mb-4" x-data="{ winnerCount: {{ count($challenge->prizes ?? []) ?: 1 }} }">
 
                         <div class="flex gap-4 mb-3">
@@ -54,9 +52,6 @@
                         <div class="space-y-3 bg-gray-50 p-4 rounded-lg border border-gray-200">
                             <p class="text-sm font-medium text-gray-700 mb-2">Detail Hadiah:</p>
 
-                            {{-- Kita loop manual pakai Blade untuk mengisi value lama --}}
-                            {{-- Menggunakan x-show untuk menyembunyikan input jika winnerCount dikurangi --}}
-
                             @for ($i = 0; $i < 3; $i++)
                                 <div x-show="{{ $i + 1 }} <= winnerCount">
                                         <x-input-label :for="'prize_'.$i" :value="'Hadiah Juara ' . ($i + 1)" />
@@ -67,7 +62,6 @@
                                             name="prizes[]"
                                             :value="$challenge->prizes[$i] ?? ''"
                                             placeholder="Masukkan hadiah..."
-                                            {{-- FIX: Gunakan x-bind:disabled agar Alpine yang mengevaluasi logic JS-nya --}}
                                             x-bind:disabled="{{ $i + 1 }} > winnerCount"
                                         />
                                     </div>

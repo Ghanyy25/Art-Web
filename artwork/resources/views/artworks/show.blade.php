@@ -6,9 +6,9 @@
     </x-slot>
 
     <div class="py-0">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-3">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 md:flex md:space-x-8 md:items-start">
+                <div class="p-3 md:flex md:space-x-8 md:items-start">
 
                     {{-- Bagian Kiri: Gambar --}}
                     <div class="w-full md:w-2/3 mb-6 md:mb-0 flex justify-center items-center bg-gray-100 rounded-lg p-2 sticky top-6 self-start">
@@ -140,7 +140,6 @@
                     @endauth
 
                     {{-- 2. LIST KOMENTAR (SCROLLABLE) --}}
-                    {{-- max-h-[600px] overflow-y-auto: Membuat area scroll jika komentar panjang --}}
                     <div id="comments-container" class="max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                         <div id="comments-list" class="space-y-6">
                             @forelse($artwork->comments->sortByDesc('created_at') as $comment)
@@ -305,7 +304,6 @@
         }
 
         // --- 3. FITUR KIRIM KOMENTAR ---
-        // --- 3. FITUR KIRIM KOMENTAR ---
         function submitComment(event, artworkId) {
             event.preventDefault();
             const bodyInput = document.getElementById('comment-body');
@@ -346,10 +344,8 @@
                     </div>
                 `;
 
-                // PERUBAHAN PENTING: Pakai 'afterbegin' agar muncul di PALING ATAS
                 document.getElementById('comments-list').insertAdjacentHTML('afterbegin', commentHtml);
 
-                // Scroll container ke paling atas agar user melihat komentarnya
                 document.getElementById('comments-container').scrollTop = 0;
 
                 bodyInput.value = '';
@@ -390,7 +386,7 @@
             // Set nilai ke input hidden
             document.getElementById('report-type').value = type;
             document.getElementById('report-target-id').value = id;
-            document.getElementById('report-reason').value = ''; // Reset textarea
+            document.getElementById('report-reason').value = '';
 
             // Ubah Judul Modal sesuai tipe
             if (title) {
@@ -417,19 +413,15 @@
 
             console.log("Submitting Report:", { type, id, reason });
 
-            // Siapkan Payload Data JSON
             let payload = {
                 reason: reason
             };
 
-            // Logika Pengisian ID berdasarkan Tipe
             if (type === 'artwork') {
                 payload.artwork_id = id;
-                // Pastikan comment_id null agar tidak error validasi
                 payload.comment_id = null;
             } else if (type === 'comment') {
                 payload.comment_id = id;
-                // Pastikan artwork_id null
                 payload.artwork_id = null;
             }
 

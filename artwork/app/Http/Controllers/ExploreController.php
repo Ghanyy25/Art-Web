@@ -29,7 +29,7 @@ class ExploreController extends Controller
             });
         }
 
-        $artworks = $query->latest()->paginate(24); // Tampilkan 24 karya per halaman
+        $artworks = $query->latest()->paginate(32); // Tampilkan 24 karya per halaman
         $categories = Categories::all();
 
         // Tampilan untuk 'explore' yang Anda buat sebelumnya

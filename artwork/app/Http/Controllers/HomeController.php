@@ -16,7 +16,6 @@ class HomeController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'admin') {
-            // Logika Admin (Tetap seperti sebelumnya)
             $stats = [
                 'total_users'       => User::count(),
                 'total_creators'    => User::where('role', 'member')->count(),
@@ -28,7 +27,6 @@ class HomeController extends Controller
             return view('dashboard.admin.home', compact('stats'));
 
         } elseif ($user->role === 'curator') {
-            // Logika Curator (Tetap)
             if ($user->status === 'pending') {
                 return view('dashboard.curator.pending');
             }

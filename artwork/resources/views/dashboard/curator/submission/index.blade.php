@@ -11,7 +11,6 @@
                 </p>
             </div>
 
-            {{-- Tombol Kembali --}}
             <a href="{{ route('curator.challenges.show', $challenge->id) }}"
                class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 transition">
                 &larr; Kembali ke Detail
@@ -22,7 +21,6 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- ALERT: Info Status Challenge --}}
             @if($challenge->end_date->isFuture())
                 <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded-r-md shadow-sm">
                     <div class="flex">
@@ -55,7 +53,6 @@
 
             {{-- KONTEN UTAMA --}}
             @if($submissions->isEmpty())
-                {{-- State Kosong --}}
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-12 text-center border border-gray-200">
                     <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -64,10 +61,9 @@
                     <p class="text-gray-500 mt-1">Belum ada member yang mengirimkan karya untuk challenge ini.</p>
                 </div>
             @else
-                {{-- Grid Peserta --}}
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     @foreach($submissions as $submission)
-                        {{-- Kartu Peserta --}}
                         <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border-2 {{ $submission->placement ? 'border-yellow-400 ring-4 ring-yellow-50' : 'border-transparent' }}">
 
                             {{-- Header Kartu (User Info) --}}
@@ -121,7 +117,6 @@
                                             <option value="">-- Peserta Biasa --</option>
 
                                             {{-- LOOPING HADIAH (DINAMIS) --}}
-                                            {{-- Menampilkan opsi juara sesuai jumlah hadiah di database --}}
                                             @if(is_array($challenge->prizes) || is_object($challenge->prizes))
                                                 @foreach($challenge->prizes as $index => $prize)
                                                     @php $rank = $index + 1; @endphp

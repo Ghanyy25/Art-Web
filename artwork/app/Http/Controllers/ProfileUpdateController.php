@@ -33,14 +33,13 @@ class ProfileUpdateController extends Controller
                 'max:255',
                 Rule::unique(User::class)->ignore($request->user()->id),
             ],
-            // Validasi tambahan untuk fitur baru Anda
             'bio' => ['nullable', 'string', 'max:1000'],
-            'profile_picture' => ['nullable', 'image', 'max:2048'], // Max 2MB
+            'profile_picture' => ['nullable', 'image', 'max:2048'],
             'external_links.instagram' => ['nullable', 'string', 'url'],
             'external_links.behance' => ['nullable', 'string', 'url'],
             'external_links.website' => ['nullable', 'string', 'url'],
         ]);
-        
+
         $user = $request->user();
 
         // 2. LOGIKA UPLOAD GAMBAR

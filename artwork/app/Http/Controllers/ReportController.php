@@ -17,11 +17,10 @@ class ReportController extends Controller
     {
         $request->validate([
             'reason' => 'required|string|max:255',
-            'artwork_id' => 'nullable|exists:artworks,id', // Opsional
-            'comment_id' => 'nullable|exists:comments,id', // Opsional (Baru)
+            'artwork_id' => 'nullable|exists:artworks,id',
+            'comment_id' => 'nullable|exists:comments,id',
         ]);
 
-        // Pastikan salah satu (artwork_id atau comment_id) terisi
         if (!$request->artwork_id && !$request->comment_id) {
             return response()->json(['status' => 'error', 'message' => 'Target laporan tidak valid.'], 400);
         }
@@ -29,7 +28,7 @@ class ReportController extends Controller
         Reports::create([
             'reporter_user_id' => Auth::id(), // Pelapor
             'artwork_id' => $request->artwork_id,
-            'comment_id' => $request->comment_id, // Kolom baru di tabel reports (perlu migrasi jika belum ada)
+            'comment_id' => $request->comment_id,
             'reason' => $request->reason,
             'status' => 'pending',
         ]);

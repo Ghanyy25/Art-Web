@@ -6,7 +6,7 @@ use App\Models\Artworks;
 use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage; // Penting untuk mengelola file
+use Illuminate\Support\Facades\Storage; 
 
 class ArtworkController extends Controller
 {
@@ -21,7 +21,6 @@ class ArtworkController extends Controller
                             ->latest()
                             ->get();
 
-        // Nanti kita buat view-nya di: resources/views/artworks/index.blade.php
         return view('artworks.index', compact('artworks'));
     }
 
@@ -30,10 +29,8 @@ class ArtworkController extends Controller
      */
     public function create()
     {
-        // Kita butuh daftar kategori untuk ditampilkan di form <select>
         $categories = Categories::all();
 
-        // Nanti kita buat view-nya di: resources/views/artworks/create.blade.php
         return view('artworks.create', compact('categories'));
     }
 
@@ -53,7 +50,6 @@ class ArtworkController extends Controller
 
         // 2. Handle File Upload
         // Simpan file di 'storage/app/public/artworks'
-        // 'public/artworks' akan ter-link ke 'public/storage/artworks'
         $filePath = $request->file('artwork_file')->store('artworks', 'public');
 
         // 3. Simpan ke Database
@@ -85,7 +81,6 @@ class ArtworkController extends Controller
 
         $categories = Categories::all();
 
-        // Nanti kita buat view-nya di: resources/views/artworks/edit.blade.php
         return view('artworks.edit', compact('artwork', 'categories'));
     }
 

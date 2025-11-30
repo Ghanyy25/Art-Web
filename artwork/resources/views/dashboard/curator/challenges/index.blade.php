@@ -1,6 +1,4 @@
 <x-app-layout>
-    {{-- BAGIAN HEADER (TOMBOL) --}}
-    {{-- Kita pasang x-data sendiri di sini untuk mengurus tombol aktif/tidak --}}
     <x-slot name="header">
         <div x-data="{
                 currentMode: localStorage.getItem('view_mode') || 'grid',
@@ -49,7 +47,6 @@
     </x-slot>
 
     {{-- BAGIAN KONTEN UTAMA --}}
-    {{-- Bagian ini mendengarkan sinyal 'layout-change' dari header --}}
     <div class="py-6"
          x-data="{ viewMode: localStorage.getItem('view_mode') || 'grid' }"
          @layout-change.window="viewMode = $event.detail">

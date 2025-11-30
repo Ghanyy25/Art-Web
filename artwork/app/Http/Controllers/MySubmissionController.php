@@ -14,7 +14,6 @@ class MySubmissionController extends Controller
     public function index()
     {
         // Ambil submission milik user yang sedang login
-        // 'challenge' dan 'artwork' di-eager load untuk efisiensi
         $submissions = ChallengeSubmission::with(['challenge', 'artwork'])
             ->where('user_id', Auth::id())
             ->latest()

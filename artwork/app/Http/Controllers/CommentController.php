@@ -44,7 +44,6 @@ class CommentController extends Controller
         $comment = Comments::findOrFail($commentId);
 
         // Otorisasi: Hanya pemilik komentar yang bisa hapus
-        // (Anda bisa tambahkan '|| Auth::user()->role === 'admin'' jika admin boleh hapus)
         if ($comment->user_id !== Auth::id()) {
             return response()->json([
                 'status' => 'error',

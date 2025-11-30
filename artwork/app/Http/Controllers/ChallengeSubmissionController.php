@@ -50,7 +50,6 @@ class ChallengeSubmissionController extends Controller
         }
 
         // 1. VALIDASI INPUT DINAMIS
-        // Kita cek 'submission_type' ('new' atau 'existing')
         $request->validate([
             'submission_type' => 'required|in:new,existing',
 
@@ -77,7 +76,7 @@ class ChallengeSubmissionController extends Controller
                         'title'       => $request->title,
                         'description' => $request->description,
                         'file_path'   => $path,
-                        // 'category_id' => $request->category_id, // Tambahkan jika ada input kategori
+                        // 'category_id' => $request->category_id,
                     ]);
 
                     $artworkId = $artwork->id;

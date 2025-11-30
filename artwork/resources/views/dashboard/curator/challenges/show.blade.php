@@ -112,7 +112,6 @@
                             </div>
                         </div>
 
-                        {{-- Kolom Kanan: Hadiah (Looping Array) --}}
                         <div class="lg:col-span-1">
                             <div class="bg-yellow-50 rounded-xl p-6 border border-yellow-200 sticky top-6">
                                 <h3 class="text-lg font-bold text-yellow-800 mb-4 flex items-center">

@@ -19,7 +19,6 @@ class CuratorProfileController extends Controller
         }
 
         // 3. Ambil Challenge yang dibuat oleh curator ini
-        // Kita urutkan dari yang terbaru
         $challenges = Challenges::where('curator_id', $id)
             ->latest()
             ->get();
