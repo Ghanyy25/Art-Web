@@ -40,7 +40,10 @@
             </x-nav-link-vertical>
             <x-nav-link-vertical :href="route('challenges.index')" :active="request()->routeIs('challenges.index')">
             {{ __('Challenges') }}
-        </x-nav-link-vertical>
+            </x-nav-link-vertical>
+            <x-nav-link-vertical :href="route('my-submissions.index')" :active="request()->routeIs('my-submissions.index')">
+            {{ __('My Submission') }}
+            </x-nav-link-vertical>
             <x-nav-link-vertical :href="route('artworks.index')" :active="request()->routeIs('artworks.index')">
                 My Artworks
             </x-nav-link-vertical>

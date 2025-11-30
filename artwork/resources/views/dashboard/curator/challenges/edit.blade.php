@@ -59,18 +59,18 @@
 
                             @for ($i = 0; $i < 3; $i++)
                                 <div x-show="{{ $i + 1 }} <= winnerCount">
-                                    <x-input-label :for="'prize_'.$i" :value="'Hadiah Juara ' . ($i + 1)" />
-                                    <x-text-input
-                                        :id="'prize_'.$i"
-                                        class="block mt-1 w-full"
-                                        type="text"
-                                        name="prizes[]"
-                                        :value="$challenge->prizes[$i] ?? ''"
-                                        placeholder="Masukkan hadiah..."
-                                        {{-- Disable input jika disembunyikan agar tidak terkirim --}}
-                                        :disabled="{{ $i + 1 }} > winnerCount"
-                                    />
-                                </div>
+                                        <x-input-label :for="'prize_'.$i" :value="'Hadiah Juara ' . ($i + 1)" />
+                                        <x-text-input
+                                            :id="'prize_'.$i"
+                                            class="block mt-1 w-full"
+                                            type="text"
+                                            name="prizes[]"
+                                            :value="$challenge->prizes[$i] ?? ''"
+                                            placeholder="Masukkan hadiah..."
+                                            {{-- FIX: Gunakan x-bind:disabled agar Alpine yang mengevaluasi logic JS-nya --}}
+                                            x-bind:disabled="{{ $i + 1 }} > winnerCount"
+                                        />
+                                    </div>
                             @endfor
                         </div>
                     </div>

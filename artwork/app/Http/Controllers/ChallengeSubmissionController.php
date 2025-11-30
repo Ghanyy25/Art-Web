@@ -4,91 +4,108 @@ namespace App\Http\Controllers;
 
 use App\Models\Challenges;
 use App\Models\ChallengeSubmission;
-use App\Models\Artworks; // Tambahkan Model Artworks
+use App\Models\Artworks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB; // Untuk Transaction
-use Illuminate\Support\Facades\Storage; // Untuk upload file
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ChallengeSubmissionController extends Controller
 {
     /**
      * Menampilkan form submit.
-     * Mengecek apakah user sudah pernah submit sebelumnya.
      */
     public function create($challengeId)
     {
         $challenge = Challenges::findOrFail($challengeId);
 
-        // CEK 1: Apakah user sudah pernah submit di challenge ini?
+        // CEK: Apakah sudah pernah submit?
         $existingSubmission = ChallengeSubmission::where('challenge_id', $challengeId)
                                 ->where('user_id', Auth::id())
                                 ->first();
 
         if ($existingSubmission) {
             return redirect()->route('challenges.show', $challenge->slug ?? $challenge->id)
-                ->with('error', 'Anda sudah mengirimkan karya untuk challenge ini. Hanya diperbolehkan 1 kali submit.');
+                ->with('error', 'Anda sudah mengirimkan karya untuk challenge ini.');
         }
 
-        return view('dashboard.user.submission.submit', compact('challenge'));
+        // AMBIL DATA: Karya milik user untuk opsi "Pilih dari Galeri"
+        $myArtworks = Artworks::where('user_id', Auth::id())
+                        ->latest()
+                        ->get();
+
+        return view('dashboard.user.submission.submit', compact('challenge', 'myArtworks'));
     }
 
     /**
-     * Memproses upload artwork baru dan menyimpannya sebagai submission.
+     * Memproses submission (Baik upload baru maupun pilih yang lama).
      */
     public function store(Request $request, $challengeId)
     {
         $challenge = Challenges::findOrFail($challengeId);
 
-        // CEK 2: Double check di backend untuk mencegah spam/race condition
-        $existingSubmission = ChallengeSubmission::where('challenge_id', $challengeId)
-                                ->where('user_id', Auth::id())
-                                ->exists();
-
-        if ($existingSubmission) {
-            return redirect()->back()->with('error', 'Anda sudah berpartisipasi dalam challenge ini.');
+        // CEK: Validasi Ganda (Mencegah Spam)
+        if (ChallengeSubmission::where('challenge_id', $challengeId)->where('user_id', Auth::id())->exists()) {
+            return redirect()->back()->with('error', 'Anda sudah berpartisipasi.');
         }
 
-        // 1. Validasi Input (File Gambar Wajib)
+        // 1. VALIDASI INPUT DINAMIS
+        // Kita cek 'submission_type' ('new' atau 'existing')
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240', // Max 10MB
+            'submission_type' => 'required|in:new,existing',
+
+            // Validasi jika Upload Baru
+            'title'       => 'required_if:submission_type,new|nullable|string|max:255',
+            'description' => 'required_if:submission_type,new|nullable|string|max:1000',
+            'image'       => 'required_if:submission_type,new|nullable|image|max:10240',
+
+            // Validasi jika Pilih Existing
+            'existing_artwork_id' => 'required_if:submission_type,existing|nullable|exists:artworks,id',
         ]);
 
         try {
-            // Gunakan Transaction agar data konsisten (Artwork & Submission masuk bersamaan)
             DB::transaction(function () use ($request, $challenge) {
 
-                // A. Upload File
-                $path = $request->file('image')->store('artworks', 'public');
+                $artworkId = null;
 
-                // B. Buat Data Artwork Baru
-                $artwork = Artworks::create([
-                    'user_id'     => Auth::id(),
-                    'title'       => $request->title,
-                    'description' => $request->description,
-                    'file_path'   => $path,
-                    // Tambahkan field lain jika ada (misal: category_id default atau null)
-                ]);
+                if ($request->submission_type === 'new') {
+                    // --- OPSI A: UPLOAD BARU ---
+                    $path = $request->file('image')->store('artworks', 'public');
 
-                // C. Buat Data Submission (Hubungkan Artwork tadi ke Challenge)
+                    $artwork = Artworks::create([
+                        'user_id'     => Auth::id(),
+                        'title'       => $request->title,
+                        'description' => $request->description,
+                        'file_path'   => $path,
+                        // 'category_id' => $request->category_id, // Tambahkan jika ada input kategori
+                    ]);
+
+                    $artworkId = $artwork->id;
+
+                } else {
+                    // --- OPSI B: PILIH DARI GALERI ---
+                    $artworkId = $request->existing_artwork_id;
+
+                    // Keamanan: Pastikan artwork ini BENAR milik user yang login
+                    $artwork = Artworks::where('id', $artworkId)
+                                ->where('user_id', Auth::id())
+                                ->firstOrFail();
+                }
+
+                // SIMPAN SUBMISSION
                 ChallengeSubmission::create([
                     'challenge_id' => $challenge->id,
                     'user_id'      => Auth::id(),
-                    'artwork_id'   => $artwork->id,
+                    'artwork_id'   => $artworkId,
                 ]);
             });
 
             return redirect()->route('challenges.show', $challenge->slug ?? $challenge->id)
-                ->with('success', 'Karya Anda berhasil dikirim untuk challenge ini!');
+                ->with('success', 'Karya berhasil disubmit! Semoga beruntung.');
 
         } catch (\Exception $e) {
-            // Hapus file jika database gagal (opsional, untuk kebersihan storage)
-            // if (isset($path)) Storage::disk('public')->delete($path);
-
             return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat mengupload: ' . $e->getMessage())
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
     }

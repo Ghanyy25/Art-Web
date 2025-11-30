@@ -29,6 +29,7 @@ use App\Http\Controllers\Curator\ChallengeController as CuratorChallengeControll
 use App\Http\Controllers\Curator\SubmissionController as CuratorSubmissionController;
 use App\Http\Controllers\CuratorProfileController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\MySubmissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,6 +93,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Aksi Challenge (Submit)
     Route::get('/challenge/{challengeId}/submit', [ChallengeSubmissionController::class, 'create'])->name('challenge.submit.create');
     Route::post('/challenge/{challengeId}/submit', [ChallengeSubmissionController::class, 'store'])->name('challenge.submit.store');
+    Route::get('/my-submissions', [MySubmissionController::class, 'index'])->name('my-submissions.index');
 });
 
 /*
