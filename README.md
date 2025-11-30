@@ -9,20 +9,6 @@
 
 ---
 
-## 📸 Screenshots
-
-| Halaman Utama (Explore) | Detail Karya |
-|:---:|:---:|
-| ![Explore Page](path/to/screenshot_explore.png) <br> *Masonry Grid Layout* | ![Artwork Detail](path/to/screenshot_detail.png) <br> *Detail & Komentar* |
-
-| Art Challenge | Dashboard Admin |
-|:---:|:---:|
-| ![Challenge](path/to/screenshot_challenge.png) <br> *Info & Pemenang* | ![Admin](path/to/screenshot_admin.png) <br> *Moderasi Konten* |
-
-> *Catatan: Ganti `path/to/screenshot_...` dengan link gambar asli atau path file di folder public Anda.*
-
----
-
 ## ✨ Fitur Unggulan
 
 ### 👤 User & Komunitas
@@ -30,7 +16,6 @@
 * **Interaksi Sosial:** Fitur Like, Komentar (Real-time update UI), dan Follow kreator.
 * **Koleksi Favorit (Boards):** Simpan karya ke dalam grup koleksi pribadi (misal: "Inspirasi", "Referensi").
 * **Profil Kreator:** Halaman profil yang menampilkan portofolio karya.
-* **Dark Mode Support:** Tampilan ramah mata yang menyesuaikan preferensi sistem/user.
 
 ### 🏆 Gamifikasi (Challenges)
 * **Art Challenges:** Kompetisi berkala dengan tema tertentu.
@@ -48,7 +33,7 @@
 
 ## 🛠️ Teknologi yang Digunakan
 
-* **Backend:** [Laravel 11](https://laravel.com)
+* **Backend:** [Laravel 12](https://laravel.com)
 * **Frontend:** Blade Templates, [Alpine.js](https://alpinejs.dev) (untuk interaktivitas)
 * **Styling:** [Tailwind CSS](https://tailwindcss.com) (Utility-first framework)
 * **Database:** MySQL
@@ -158,5 +143,5 @@ Project ini dilisensikan di bawah [MIT License](LICENSE).
 ---
 
 <p align="center">
-  Dibuat dengan ❤️ oleh <a href="https://github.com/ghanyy25">Ghanyy25</a>
+  Dibuat oleh <a href="https://github.com/ghanyy25">Ghanyy25</a>
 </p>
