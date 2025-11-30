@@ -103,12 +103,12 @@
 
                 {{-- LAYOUT MASONRY (Pinterest Style) --}}
                 {{-- Menggunakan 'columns' alih-alih 'grid' --}}
-                <div class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 px-2 sm:px-0">
+                <div class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 px-2 sm:px-0 ">
 
                     @foreach($artworks as $artwork)
                     {{-- 'break-inside-avoid' mencegah item terpotong antar kolom --}}
                     {{-- 'mb-4' memberikan jarak vertikal antar item --}}
-                    <div class="break-inside-avoid mb-4 relative group rounded-xl overflow-hidden shadow-sm hover:shadow-md bg-white transition-shadow duration-300">
+                    <div class="break-inside-avoid mb-4 relative group rounded-xl overflow-hidden shadow-sm hover:shadow-md bg-white transition-shadow duration-300 border border-gray-200">
 
                         {{-- Hapus 'min-h-[150px]' dan biarkan 'h-auto' agar tinggi mengikuti gambar --}}
                         <img src="{{ Storage::url($artwork->file_path) }}" alt="{{ $artwork->title }}" class="w-full h-auto object-cover block">

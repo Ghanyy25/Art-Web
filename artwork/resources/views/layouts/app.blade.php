@@ -47,7 +47,7 @@
             </div>
         @else
             {{-- Layout untuk Tamu (Belum Login) --}}
-           <div class="flex h-screen bg-white overflow-hidden">
+           <div class="flex h-screen bg- overflow-hidden">
 
                 {{-- Sidebar Guest --}}
                 @include('layouts.navigation-guest')

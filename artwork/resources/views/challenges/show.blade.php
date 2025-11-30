@@ -184,6 +184,66 @@
                         </div>
                     </div>
 
+                    @if(isset($winners) && $winners->count() > 0)
+        <div class="bg-gradient-to-b from-yellow-50 to-white rounded-xl shadow-md border border-yellow-200 overflow-hidden relative p-6 md:p-8 mb-8">
+
+            {{-- Hiasan Background --}}
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-yellow-300 rounded-full opacity-20 blur-xl"></div>
+            <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-orange-300 rounded-full opacity-20 blur-xl"></div>
+
+            <div class="relative z-10 text-center mb-8">
+                <h3 class="text-2xl font-extrabold text-gray-900 flex items-center justify-center gap-2">
+                    <i class="fas fa-crown text-yellow-500 text-3xl"></i> Hall of Fame
+                </h3>
+                <p class="text-gray-500 text-sm">Selamat kepada para pemenang challenge ini!</p>
+            </div>
+
+            {{-- Grid Podium --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end justify-center">
+                @foreach($winners as $winner)
+                    {{-- Logika Tampilan: Juara 1 di Tengah (Order 2), Juara 2 di Kiri (Order 1), Juara 3 di Kanan (Order 3) --}}
+                    <div class="relative flex flex-col items-center
+                        {{ $winner->placement == 1 ? 'order-first md:order-2 scale-105 z-10' : ($winner->placement == 2 ? 'md:order-1' : 'md:order-3') }}">
+
+                        
+
+                        {{-- Card Artwork Pemenang --}}
+                        <div class="group relative w-full bg-white rounded-xl shadow-lg overflow-hidden border-2
+                            {{ $winner->placement == 1 ? 'border-yellow-400 ring-4 ring-yellow-100' :
+                              ($winner->placement == 2 ? 'border-gray-300' : 'border-orange-300') }}">
+
+                            {{-- Link ke Detail Artwork --}}
+                            <a href="{{ route('artworks.show', $winner->artwork->id) }}">
+                                <div class="aspect-w-4 aspect-h-3 bg-gray-100">
+                                    <img src="{{ Storage::url($winner->artwork->file_path) }}"
+                                         alt="Juara {{ $winner->placement }}"
+                                         class="w-full h-48 {{ $winner->placement == 1 ? 'h-56' : '' }} object-cover transition duration-500 group-hover:scale-110">
+                                </div>
+                            </a>
+
+                            {{-- Badge Juara --}}
+                            <div class="absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm
+                                {{ $winner->placement == 1 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600' :
+                                  ($winner->placement == 2 ? 'bg-gradient-to-r from-gray-400 to-gray-600' : 'bg-gradient-to-r from-orange-400 to-orange-600') }}">
+                                Juara {{ $winner->placement }}
+                            </div>
+                        </div>
+
+                        {{-- Info User --}}
+                        <div class="mt-4 text-center">
+                            <div class="flex flex-col items-center">
+                                <img src="{{ $winner->user->profile_picture ? Storage::url($winner->user->profile_picture) : asset('images/default.png') }}"
+                                     class="w-12 h-12 rounded-full border-2 border-white shadow-sm object-cover mb-2">
+                                <span class="font-bold text-gray-800 text-sm md:text-base">{{ $winner->user->name }}</span>
+                                <span class="text-xs text-gray-500 truncate max-w-[150px] italic">"{{ $winner->artwork->title }}"</span>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
                     {{-- Card Action (CTA Submit) --}}
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center sticky top-6">
                         <h4 class="font-bold text-gray-900 mb-2">Tertarik Ikutan?</h4>
