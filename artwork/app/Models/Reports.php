@@ -10,6 +10,7 @@ class Reports extends Model
     protected $fillable = [
         'reporter_user_id',
         'artwork_id',
+        'comment_id',
         'reason',
         'status',
     ];
@@ -36,5 +37,10 @@ class Reports extends Model
     public function artwork(): BelongsTo
     {
         return $this->belongsTo(Artworks::class);
+    }
+
+    public function comment()
+    {
+        return $this->belongsTo(Comments::class, 'comment_id');
     }
 }

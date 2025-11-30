@@ -115,22 +115,15 @@
 
                         <a href="{{ route('artworks.show', $artwork->id) }}" class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></a>
 
-                        @auth
-                        <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col gap-2">
-                            <form action="{{ route('favorite.toggle', $artwork->id) }}" method="POST">
-                                @csrf
-                                <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-50 text-gray-800 transition-transform hover:scale-110">
-                                    <i class="fas fa-bookmark"></i>
-                                </button>
-                            </form>
-                        </div>
-                        @endauth
-
                         <div class="p-3 bg-white">
                             <h3 class="text-sm font-semibold text-gray-900 truncate">{{ $artwork->title }}</h3>
                             <div class="flex items-center justify-between mt-1">
                                 <a href="{{ route('profile.show', $artwork->user->id) }}" class="flex items-center gap-2 group/user">
-                                    <img src="{{ asset($artwork->user->profile_picture ? Storage::url($artwork->user->profile_picture) : 'images/default.png') }}"
+                                    <img src="{{
+                                                $artwork->user->profile_picture
+                                                    ? Storage::url($artwork->user->profile_picture)
+                                                    : 'https://ui-avatars.com/api/?name=' . urlencode($artwork->user->name) . '&background=random&size=128'
+                                            }}"
                                          class="w-5 h-5 rounded-full object-cover"
                                          alt="{{ $artwork->user->name }}">
                                     <span class="text-xs text-gray-500 group-hover/user:underline truncate max-w-[80px]">{{ $artwork->user->name }}</span>

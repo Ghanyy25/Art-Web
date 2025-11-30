@@ -27,7 +27,7 @@ class ReportController extends Controller
         }
 
         Reports::create([
-            'user_id' => Auth::id(), // Pelapor
+            'reporter_user_id' => Auth::id(), // Pelapor
             'artwork_id' => $request->artwork_id,
             'comment_id' => $request->comment_id, // Kolom baru di tabel reports (perlu migrasi jika belum ada)
             'reason' => $request->reason,
