@@ -47,7 +47,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',  
+            'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'external_links' => 'json',
         ];
@@ -107,5 +107,22 @@ class User extends Authenticatable
     public function reports(): HasMany
     {
         return $this->hasMany(Reports::class);
+    }
+
+    // Tambahkan relasi ini di dalam class User
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
+    }
+
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+    }
+
+    // Helper untuk cek status follow
+    public function isFollowing($userId)
+    {
+        return $this->following()->where('following_id', $userId)->exists();
     }
 }

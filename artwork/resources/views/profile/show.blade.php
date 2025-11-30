@@ -26,7 +26,6 @@
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                             <div>
                                 <h1 class="text-2xl font-bold text-gray-900">{{ $creator->name }}</h1>
-                                <p class="text-sm text-gray-500">Member sejak {{ $creator->created_at->format('d M Y') }}</p>
                             </div>
 
                             {{-- Tombol Edit (Hanya muncul jika user yang login adalah pemilik profil) --}}
@@ -70,6 +69,36 @@
                                 @endforeach
                             </div>
                         @endif
+
+                        <div class="flex items-center gap-6 mt-4 text-center md:text-left">
+
+                        {{-- Bagian Followers (Pengikut) --}}
+                        <div>
+                            <span id="follower-count-{{ $creator->id }}" class="block text-2xl font-bold text-gray-900">
+                                {{ $creator->followers()->count() }}
+                            </span>
+                            <span class="text-sm text-gray-500">Pengikut</span>
+                        </div>
+
+                        {{-- Bagian Following (Mengikuti) --}}
+                        <div>
+                            <span class="block text-2xl font-bold text-gray-900">
+                                {{ $creator->following()->count() }}
+                            </span>
+                            <span class="text-sm text-gray-500">Mengikuti</span>
+                        </div>
+
+                        {{-- Tombol Follow/Unfollow (Hanya muncul jika user yang login BUKAN pemilik profil) --}}
+                        @if(auth()->check() && auth()->id() !== $creator->id)
+                        <button
+                            onclick="toggleFollow({{ $creator->id }})"
+                            id="follow-btn-{{ $creator->id }}"
+                            class="ml-2 px-4 py-1.5 rounded-full text-sm font-semibold transition-all border {{ auth()->user()->isFollowing($creator->id) ? 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-red-50 hover:text-red-600 hover:border-red-200' : 'bg-indigo-600 text-white border-transparent hover:bg-indigo-700 shadow-sm' }}">
+                            {{ auth()->user()->isFollowing($creator->id) ? 'Mengikuti' : 'Ikuti' }}
+                        </button>
+                    @endif
+
+                    </div>
                     </div>
                 </div>
             </div>
@@ -121,4 +150,55 @@
 
         </div>
     </div>
+    <script>
+    function toggleFollow(userId) {
+        axios.post('/user/' + userId + '/follow')
+            .then(function (response) {
+                const data = response.data;
+                const btn = document.getElementById('follow-btn-' + userId);
+                const countSpan = document.getElementById('follower-count-' + userId);
+
+                // Update Angka
+                if(countSpan) countSpan.innerText = data.followers_count;
+
+                // Update Tampilan Tombol
+                if (data.is_following) {
+                    // Jadi State "Mengikuti"
+                    btn.innerText = "Mengikuti";
+                    btn.classList.remove('bg-indigo-600', 'text-white', 'border-transparent', 'hover:bg-indigo-700');
+                    btn.classList.add('bg-gray-100', 'text-gray-800', 'border-gray-300', 'hover:bg-red-50', 'hover:text-red-600', 'hover:border-red-200');
+                } else {
+                    // Jadi State "Ikuti"
+                    btn.innerText = "Ikuti";
+                    btn.classList.remove('bg-gray-100', 'text-gray-800', 'border-gray-300', 'hover:bg-red-50', 'hover:text-red-600', 'hover:border-red-200');
+                    btn.classList.add('bg-indigo-600', 'text-white', 'border-transparent', 'hover:bg-indigo-700');
+                }
+            })
+            .catch(function (error) {
+                if(error.response && error.response.status === 401) {
+                    alert('Silakan login untuk mengikuti kurator ini.');
+                    window.location.href = '/login';
+                } else {
+                    console.error(error);
+                }
+            });
+    }
+
+    // Efek Hover khusus untuk tombol "Mengikuti" agar berubah jadi "Unfollow" (Opsional UX)
+    document.addEventListener('DOMContentLoaded', () => {
+        const followBtns = document.querySelectorAll('[id^="follow-btn-"]');
+        followBtns.forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                if(btn.innerText === 'Mengikuti') {
+                    btn.innerText = 'Batal Ikuti';
+                }
+            });
+            btn.addEventListener('mouseleave', () => {
+                if(btn.innerText === 'Batal Ikuti') {
+                    btn.innerText = 'Mengikuti';
+                }
+            });
+        });
+    });
+</script>
 </x-app-layout>

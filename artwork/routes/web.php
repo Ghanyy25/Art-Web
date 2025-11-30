@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\ModerationController;
 use App\Http\Controllers\Curator\ChallengeController as CuratorChallengeController;
 use App\Http\Controllers\Curator\SubmissionController as CuratorSubmissionController;
 use App\Http\Controllers\CuratorProfileController;
+use App\Http\Controllers\FollowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/comment/artwork/{artworkId}', [CommentController::class, 'store'])->name('comment.store');
     Route::delete('/comment/{commentId}', [CommentController::class, 'destroy'])->name('comment.destroy');
     Route::post('/report/artwork/{artworkId}', [ReportController::class, 'store'])->name('report.store');
+    Route::post('/user/{user}/follow', [FollowController::class, 'toggle'])->name('user.follow');
 
     // Aksi Challenge (Submit)
     Route::get('/challenge/{challengeId}/submit', [ChallengeSubmissionController::class, 'create'])->name('challenge.submit.create');
