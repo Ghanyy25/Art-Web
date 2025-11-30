@@ -18,7 +18,7 @@
 
         @auth
             {{-- Layout untuk User Login (Dashboard) --}}
-            <div class="flex h-screen bg-gray-50 overflow-hidden">
+            <div class="flex h-screen bg-white overflow-hidden">
 
                 {{-- Sidebar --}}
                 @include('layouts.navigation')
@@ -36,7 +36,7 @@
                     @endisset
 
                     {{-- Scrollable Content Area --}}
-                    <main class="flex-1 overflow-y-auto bg-gray-100 p-6 scroll-smooth">
+                    <main class="flex-1 overflow-y-auto bg-white p-6 scroll-smooth">
                         {{-- Slot Konten --}}
                         <div class="max-w-7xl mx-auto">
                             {{ $slot }}
@@ -47,7 +47,7 @@
             </div>
         @else
             {{-- Layout untuk Tamu (Belum Login) --}}
-           <div class="flex h-screen bg-gray-100 overflow-hidden">
+           <div class="flex h-screen bg-white overflow-hidden">
 
                 {{-- Sidebar Guest --}}
                 @include('layouts.navigation-guest')

@@ -132,23 +132,90 @@
                     <h3 class="text-2xl font-bold mb-6">Komentar</h3>
 
                     <div id="comments-list" class="space-y-6 mb-8">
-                        @forelse($artwork->comments as $comment)
-                            <div class="flex items-start space-x-4">
-                                <img src="{{ Storage::url($comment->user->profile_picture) ?? asset('images/Default.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full object-cover border">
+                    @forelse($artwork->comments as $comment)
+                        <div id="comment-{{ $comment->id }}" class="flex items-start space-x-4 group">
 
-                                <div class="bg-gray-100 p-4 rounded-lg w-full">
-                                    <div class="flex justify-between items-center mb-1">
-                                        <h4 class="font-bold text-gray-900">{{ $comment->user->name }}</h4>
-                                        <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                            {{-- Avatar --}}
+                            <img src="{{ Storage::url($comment->user->profile_picture) ?? asset('images/Default.png')  }}"
+                                alt="User Avatar" class="w-10 h-10 rounded-full object-cover border flex-shrink-0">
+
+                            <div class="flex-1">
+                                <div class="bg-gray-100 p-4 rounded-lg rounded-tl-none relative">
+
+                                    {{-- Header Komentar --}}
+                                    <div class="flex justify-between items-start mb-1">
+                                        <div>
+                                            <h4 class="font-bold text-gray-900 text-sm">{{ $comment->user->name }}</h4>
+                                            <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                                        </div>
+
+                                        {{-- DROPDOWN MENU (Titik Tiga) --}}
+                                        @auth
+                                            <div class="relative" x-data="{ open: false }">
+                                                <button @click="open = !open" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+                                                </button>
+
+                                                {{-- Isi Dropdown --}}
+                                                <div x-show="open" @click.away="open = false"
+                                                    class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 border border-gray-200 py-1"
+                                                    style="display: none;">
+
+                                                    @if(Auth::id() === $comment->user_id)
+                                                        {{-- Tombol Hapus (Milik Sendiri) --}}
+                                                        <button onclick="deleteComment({{ $comment->id }})"
+                                                                class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                                                            <i class="fas fa-trash-alt mr-2"></i> Hapus
+                                                        </button>
+                                                    @else
+                                                        {{-- Tombol Lapor (Milik Orang Lain) --}}
+                                                        <button onclick="openReportModal('comment', {{ $comment->id }})"
+                                                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+                                                            <i class="fas fa-flag mr-2"></i> Laporkan
+                                                        </button>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endauth
                                     </div>
-                                    <p class="text-gray-700">{{ $comment->body }}</p>
+
+                                    {{-- Isi Komentar --}}
+                                    <p class="text-gray-800 text-sm whitespace-pre-wrap break-words">{{ $comment->body }}</p>
                                 </div>
                             </div>
-                        @empty
-                            <p class="text-gray-500 italic" id="no-comments-text">Belum ada komentar. Jadilah yang pertama!</p>
-                        @endforelse
-                    </div>
+                        </div>
+                    @empty
+                        <p class="text-gray-500 italic text-center py-4" id="no-comments-text">Belum ada komentar. Jadilah yang pertama!</p>
+                    @endforelse
+                </div>
 
+                {{-- MODAL REPORT (Universal untuk Artwork & Comment) --}}
+                <div id="report-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-sm">
+                    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 transform transition-all scale-100">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4" id="report-modal-title">Laporkan Konten</h3>
+
+                        <form id="report-form" onsubmit="submitReport(event)">
+                            @csrf
+                            {{-- Input Hidden untuk menyimpan ID target --}}
+                            <input type="hidden" id="report-type" name="type"> {{-- 'artwork' atau 'comment' --}}
+                            <input type="hidden" id="report-target-id" name="target_id">
+
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Alasan Pelaporan</label>
+                                <textarea id="report-reason" name="reason" rows="3" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Jelaskan alasan Anda (misal: Spam, SARA, Kasar)..." required></textarea>
+                            </div>
+
+                            <div class="flex justify-end space-x-3">
+                                <button type="button" onclick="closeReportModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none">
+                                    Batal
+                                </button>
+                                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none">
+                                    Kirim Laporan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                     @auth
                         <form id="comment-form" onsubmit="submitComment(event, {{ $artwork->id }})" class="relative">
                             <div class="flex items-start space-x-4">
@@ -231,17 +298,28 @@
             // Buat HTML element baru untuk komentar (Append manual)
             // Anda bisa menyesuaikan HTML ini dengan desain komentar Anda
             const commentHtml = `
-                <div class="flex items-start space-x-4  animate-fade-in-down">
-                    <img src="${data.user_avatar}" class="w-10 h-10 object-cover rounded-full">
-                    <div class="bg-gray-100 p-4 rounded-lg w-full">
-                                    <div class="flex justify-between items-center mb-1">
-                                        <h4 class="font-bold text-gray-900">${data.user_name || 'Anda'}</h4>
-                                        <span class="text-xs text-gray-500">Baru saja</span>
-                                    </div>
-                                    <p class="text-gray-700">${newComment.body}</p>
+    <div id="comment-${newComment.id}" class="flex items-start space-x-4 animate-fade-in-down group">
+        <img src="${data.user_avatar}" class="w-10 h-10 object-cover rounded-full border border-gray-200">
+
+        <div class="flex-1">
+            <div class="bg-gray-100 p-4 rounded-lg rounded-tl-none w-full relative">
+                <div class="flex justify-between items-center mb-1">
+                    <h4 class="font-bold text-gray-900 text-sm">${data.user_name || 'Anda'}</h4>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-gray-500">Baru saja</span>
+
+                        {{-- Tombol Dropdown (Hanya visual di JS, fungsi belum aktif karena perlu bind event listener ulang) --}}
+                        {{-- Untuk JS murni, tombol hapus langsung lebih mudah --}}
+                        <button onclick="deleteComment(${newComment.id})" class="text-red-400 hover:text-red-600 text-xs ml-2" title="Hapus">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                     </div>
                 </div>
-            `;
+                <p class="text-gray-800 text-sm whitespace-pre-wrap break-words">${newComment.body}</p>
+            </div>
+        </div>
+    </div>
+`;
 
             // Masukkan ke dalam list komentar
             document.getElementById('comments-list').insertAdjacentHTML('beforeend', commentHtml);
@@ -285,6 +363,91 @@ function toggleFavorite(artworkId) {
             if(error.response && error.response.status === 401) {
                 alert('Silakan login untuk menyimpan karya ini.');
                 window.location.href = '/login';
+            }
+        });
+}
+
+function deleteComment(commentId) {
+    if(!confirm("Apakah Anda yakin ingin menghapus komentar ini?")) return;
+
+    axios.delete('/comment/' + commentId)
+        .then(function(response) {
+            // Hapus elemen HTML komentar dari daftar
+            const commentElement = document.getElementById('comment-' + commentId);
+            if(commentElement) {
+                commentElement.remove();
+
+                // Cek jika komentar habis, tampilkan teks kosong
+                const list = document.getElementById('comments-list');
+                if(list.children.length === 0) {
+                    list.innerHTML = '<p class="text-gray-500 italic text-center py-4" id="no-comments-text">Belum ada komentar. Jadilah yang pertama!</p>';
+                }
+            }
+            alert('Komentar berhasil dihapus.');
+        })
+        .catch(function(error) {
+            console.error(error);
+            alert('Gagal menghapus komentar.');
+        });
+}
+
+function openReportModal(type, id) {
+    const modal = document.getElementById('report-modal');
+    const title = document.getElementById('report-modal-title');
+    const inputType = document.getElementById('report-type');
+    const inputId = document.getElementById('report-target-id');
+    const reason = document.getElementById('report-reason');
+
+    // Set Data
+    inputType.value = type; // 'artwork' atau 'comment'
+    inputId.value = id;
+    reason.value = ''; // Reset text area
+
+    // Ubah Judul Modal
+    if(type === 'artwork') {
+        title.innerText = "Laporkan Karya Ini";
+    } else {
+        title.innerText = "Laporkan Komentar Ini";
+    }
+
+    // Tampilkan Modal
+    modal.classList.remove('hidden');
+}
+
+function closeReportModal() {
+    document.getElementById('report-modal').classList.add('hidden');
+}
+
+// --- SUBMIT REPORT ---
+function submitReport(event) {
+    event.preventDefault();
+
+    const type = document.getElementById('report-type').value;
+    const id = document.getElementById('report-target-id').value;
+    const reason = document.getElementById('report-reason').value;
+
+    // Siapkan Payload Data
+    let data = { reason: reason };
+    if (type === 'artwork') {
+        data.artwork_id = id;
+    } else {
+        data.comment_id = id;
+    }
+
+    // Kirim ke Server
+    // Pastikan route di web.php adalah: Route::post('/report', [ReportController::class, 'store']);
+    // Jika route Anda '/report/artwork/{id}', Anda perlu route baru yang umum '/report/store'
+    axios.post('/report/store', data)
+        .then(function(response) {
+            alert(response.data.message);
+            closeReportModal();
+        })
+        .catch(function(error) {
+            console.error(error);
+            if(error.response && error.response.status === 401) {
+                alert('Silakan login terlebih dahulu.');
+            } else {
+                alert('Gagal mengirim laporan. Silakan coba lagi.');
             }
         });
 }

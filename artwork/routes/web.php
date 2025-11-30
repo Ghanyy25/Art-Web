@@ -86,6 +86,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/report/artwork/{artworkId}', [ReportController::class, 'store'])->name('report.store');
     Route::post('/user/{user}/follow', [FollowController::class, 'toggle'])->name('user.follow');
 
+    // Route Umum untuk Report (Artwork/Comment)
+    Route::post('/report/store', [ReportController::class, 'store'])->name('report.store.general');
+
     // Aksi Challenge (Submit)
     Route::get('/challenge/{challengeId}/submit', [ChallengeSubmissionController::class, 'create'])->name('challenge.submit.create');
     Route::post('/challenge/{challengeId}/submit', [ChallengeSubmissionController::class, 'store'])->name('challenge.submit.store');

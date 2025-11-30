@@ -39,20 +39,24 @@ class CommentController extends Controller
         ]);
     }
 
-    /**
-     * Hapus komentar (hanya pemilik komentar).
-     */
     public function destroy($commentId)
     {
         $comment = Comments::findOrFail($commentId);
 
         // Otorisasi: Hanya pemilik komentar yang bisa hapus
+        // (Anda bisa tambahkan '|| Auth::user()->role === 'admin'' jika admin boleh hapus)
         if ($comment->user_id !== Auth::id()) {
-            abort(403, 'Aksi tidak diizinkan.');
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda tidak berhak menghapus komentar ini.'
+            ], 403);
         }
 
         $comment->delete();
 
-        return redirect()->back()->with('success', 'Komentar berhasil dihapus.');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Komentar berhasil dihapus.'
+        ]);
     }
 }

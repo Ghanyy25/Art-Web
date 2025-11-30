@@ -13,34 +13,30 @@ class ReportController extends Controller
      * Menyimpan laporan konten dari Member.
      * Laporan ini akan dikirim ke Moderation Queue milik Admin.
      */
-    public function store(Request $request, $artworkId)
+    public function store(Request $request)
     {
-        // 1. Validasi Artwork
-        $artwork = Artworks::findOrFail($artworkId);
-
-        // 2. Validasi Input (Alasan Laporan)
         $request->validate([
-            'reason' => 'required|string|max:500',
+            'reason' => 'required|string|max:255',
+            'artwork_id' => 'nullable|exists:artworks,id', // Opsional
+            'comment_id' => 'nullable|exists:comments,id', // Opsional (Baru)
         ]);
 
-        // 3. Cek apakah user ini sudah pernah melaporkan karya ini (mencegah spam)
-        $isReported = Reports::where('artwork_id', $artworkId)
-                             ->where('reporter_user_id', Auth::id())
-                             ->exists();
-
-        if ($isReported) {
-             return redirect()->back()->with('error', 'Anda sudah pernah melaporkan karya ini.');
+        // Pastikan salah satu (artwork_id atau comment_id) terisi
+        if (!$request->artwork_id && !$request->comment_id) {
+            return response()->json(['status' => 'error', 'message' => 'Target laporan tidak valid.'], 400);
         }
 
-        // 4. Simpan laporan baru ke database
         Reports::create([
-            'reporter_user_id' => Auth::id(),
-            'artwork_id' => $artworkId,
+            'user_id' => Auth::id(), // Pelapor
+            'artwork_id' => $request->artwork_id,
+            'comment_id' => $request->comment_id, // Kolom baru di tabel reports (perlu migrasi jika belum ada)
             'reason' => $request->reason,
-            'status' => 'pending', // Status default untuk ditinjau Admin
+            'status' => 'pending',
         ]);
 
-        // 5. Kirim respon sukses
-        return redirect()->back()->with('success', 'Laporan berhasil dikirim dan akan ditinjau oleh Admin.');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Laporan berhasil dikirim. Terima kasih atas bantuan Anda menjaga komunitas ini.'
+        ]);
     }
 }

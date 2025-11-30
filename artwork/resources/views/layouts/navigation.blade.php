@@ -1,4 +1,4 @@
-<nav class="w-64 h-screen bg-white shadow-lg flex flex-col flex-shrink-0" x-data="{ open: false }">
+<nav class="w-64 h-screen bg-white shadow-lg flex flex-col flex-shrink-0 " x-data="{ open: false }">
 
     <div class="flex items-center justify-center h-16 border-b">
         <a href="{{ route('dashboard') }}">
@@ -6,7 +6,7 @@
         </a>
     </div>
 
-    <div class="flex-1 py-6 space-y-2 overflow-y-auto">
+    <div class="flex-1 py-6 space-y-2 overflow-y-auto border">
 
         @if(Auth::user()->role == 'admin')
 
@@ -51,7 +51,7 @@
         @endif
         </div>
 
-    <div class="p-4 border-t flex items-center justify-between" x-data="{ confirmLogout: false }">
+    <div class="p-4 border-t flex items-center justify-between border" x-data="{ confirmLogout: false }">
         {{-- 1. Link Profil (Kiri) --}}
         @php
             $profileRoute = '#';
@@ -61,7 +61,7 @@
             } elseif(Auth::user()->role == 'member') {
                 // Jika Member biasa, arahkan ke Profil Creator
                 $profileRoute = route('profile.show', Auth::id());
-            } 
+            }
         @endphp
 
     {{-- 1. Link Profil (Kiri) --}}
