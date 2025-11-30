@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Categories;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str; // Untuk membuat slug otomatis
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -14,11 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        // Ambil semua data kategori, urutkan dari yang terbaru
         $categories = Categories::latest()->get();
 
-        // Tampilkan view admin.categories.index (nanti kita buat view-nya)
-        // Kita kirim data $categories ke view tersebut
+        // Tampilkan view admin.categories.index
         return view('dashboard.admin.categories.index', compact('categories'));
     }
 
@@ -27,7 +25,6 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validasi Input
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
         ], [
@@ -35,14 +32,13 @@ class CategoryController extends Controller
             'name.unique' => 'Kategori ini sudah ada.',
         ]);
 
-        // 2. Simpan ke Database
+        // Simpan ke Database
         Categories::create([
             'name' => $request->name,
-            // Buat slug otomatis dari nama (misal: "UI/UX Design" jadi "ui-ux-design")
             'slug' => Str::slug($request->name),
         ]);
 
-        // 3. Kembali ke halaman sebelumnya dengan pesan sukses
+        // Kembali ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Kategori berhasil ditambahkan!');
     }
 
@@ -50,13 +46,11 @@ class CategoryController extends Controller
     {
         $category = Categories::findOrFail($id);
 
-        // 1. Validasi Input
         $request->validate([
             // Validasi unique kecuali untuk id kategori ini sendiri
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
         ]);
 
-        // 2. Update Data
         $category->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
@@ -72,7 +66,6 @@ class CategoryController extends Controller
     {
         $category = Categories::findOrFail($id);
 
-        // Hapus data
         $category->delete();
 
         return redirect()->back()->with('success', 'Kategori berhasil dihapus!');

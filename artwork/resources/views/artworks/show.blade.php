@@ -115,95 +115,105 @@
                 <div class="border-t border-gray-200 px-6 py-8 bg-gray-50/50">
                     <h3 class="text-lg font-bold text-gray-900 mb-6">Komentar <span class="text-gray-500 font-normal text-sm">({{ $artwork->comments->count() }})</span></h3>
 
-                    {{-- List Komentar --}}
-                    <div id="comments-list" class="space-y-6 mb-8">
-                        @forelse($artwork->comments as $comment)
-                            <div id="comment-{{ $comment->id }}" class="flex items-start space-x-4 group">
+                    {{-- 1. FORM INPUT KOMENTAR (DIPINDAHKAN KE ATAS) --}}
+                    @auth
+                        <div class="mb-8 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                            <form id="comment-form" onsubmit="submitComment(event, {{ $artwork->id }})" class="relative flex items-start space-x-4">
+                                <img src="{{ auth()->user()->profile_picture ? Storage::url(auth()->user()->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) }}"
+                                     alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full border border-gray-200 flex-shrink-0">
+                                <div class="w-full">
+                                    <textarea
+                                        id="comment-body"
+                                        rows="2"
+                                        class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm p-3 text-sm resize-none"
+                                        placeholder="Tulis pendapatmu tentang karya ini..."
+                                        required></textarea>
 
-                                {{-- Avatar User --}}
-                                <a href="{{ route('profile.show', $comment->user->id) }}">
-                                    <img class="w-10 h-10 rounded-full object-cover border border-gray-200 flex-shrink-0"
-                                    src="{{ $comment->user->profile_picture ? Storage::url($comment->user->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode($comment->user->name) }}"
-                                    alt="{{ $comment->user->name }}">
-                                </a>
-
-                                <div class="flex-1">
-                                    <div class="bg-white border border-gray-200 p-4 rounded-lg rounded-tl-none relative shadow-sm">
-
-                                        <div class="flex justify-between items-start mb-1">
-                                            <div>
-                                                <a href="{{ route('profile.show', $comment->user->id) }}" class="font-bold text-gray-900 text-sm hover:underline">
-                                                    {{ $comment->user->name }}
-                                                </a>
-                                                <span class="text-xs text-gray-500 ml-2">{{ $comment->created_at->diffForHumans() }}</span>
-                                            </div>
-
-                                            {{-- Menu Opsi (Titik Tiga) --}}
-                                            @auth
-                                                <div class="relative" x-data="{ open: false }">
-                                                    <button @click="open = !open" class="text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded hover:bg-gray-100 transition">
-                                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                                                        </svg>
-                                                    </button>
-
-                                                    <div x-show="open" @click.away="open = false"
-                                                         x-transition:enter="transition ease-out duration-100"
-                                                         x-transition:enter-start="transform opacity-0 scale-95"
-                                                         x-transition:enter-end="transform opacity-100 scale-100"
-                                                         class="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg z-50 border border-gray-100 py-1 origin-top-right"
-                                                         style="display: none;">
-
-                                                        @if(Auth::id() === $comment->user_id)
-                                                            <button onclick="deleteComment({{ $comment->id }})"
-                                                                    class="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition flex items-center">
-                                                                <svg class="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                                                Hapus
-                                                            </button>
-                                                        @else
-                                                            <button onclick="openReportModal('comment', {{ $comment->id }})"
-                                                                    class="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition flex items-center">
-                                                                <svg class="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-8a2 2 0 01-2-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H3z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v17"></path></svg>
-                                                                Laporkan
-                                                            </button>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            @endauth
-                                        </div>
-
-                                        <p class="text-gray-800 text-sm whitespace-pre-wrap break-words leading-relaxed">{{ $comment->body }}</p>
+                                    <div class="mt-2 text-right">
+                                        <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-indigo-700 transition shadow-sm">
+                                            Kirim Komentar
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                        @empty
-                            <div class="text-center py-8" id="no-comments-text">
-                                <p class="text-gray-400 italic text-sm">Belum ada komentar. Jadilah yang pertama!</p>
-                            </div>
-                        @endforelse
-                    </div>
-
-                    {{-- Form Input Komentar --}}
-                    @auth
-                        <form id="comment-form" onsubmit="submitComment(event, {{ $artwork->id }})" class="relative flex items-start space-x-4">
-                            <img src="{{ auth()->user()->profile_picture ? Storage::url(auth()->user()->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) }}"
-                                    alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full border border-gray-200 flex-shrink-0">
-                            <div class="w-full">
-                                <textarea
-                                    id="comment-body"
-                                    rows="2"
-                                    class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm p-3 text-sm resize-none"
-                                    placeholder="Tulis pendapatmu..."
-                                    required></textarea>
-
-                                <div class="mt-2 text-right">
-                                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-indigo-700 transition shadow-sm">
-                                        Kirim
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     @endauth
+
+                    {{-- 2. LIST KOMENTAR (SCROLLABLE) --}}
+                    {{-- max-h-[600px] overflow-y-auto: Membuat area scroll jika komentar panjang --}}
+                    <div id="comments-container" class="max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                        <div id="comments-list" class="space-y-6">
+                            @forelse($artwork->comments->sortByDesc('created_at') as $comment)
+                                {{-- Gunakan sortByDesc agar komentar terbaru di atas (sesuai posisi form) --}}
+                                <div id="comment-{{ $comment->id }}" class="flex items-start space-x-4 group">
+
+                                    {{-- Avatar User --}}
+                                    <a href="{{ route('profile.show', $comment->user->id) }}">
+                                        <img class="w-10 h-10 rounded-full object-cover border border-gray-200 flex-shrink-0"
+                                        src="{{ $comment->user->profile_picture ? Storage::url($comment->user->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode($comment->user->name) }}"
+                                        alt="{{ $comment->user->name }}">
+                                    </a>
+
+                                    <div class="flex-1">
+                                        <div class="bg-white border border-gray-200 p-4 rounded-lg rounded-tl-none relative shadow-sm">
+
+                                            <div class="flex justify-between items-start mb-1">
+                                                <div>
+                                                    <a href="{{ route('profile.show', $comment->user->id) }}" class="font-bold text-gray-900 text-sm hover:underline">
+                                                        {{ $comment->user->name }}
+                                                    </a>
+                                                    <span class="text-xs text-gray-500 ml-2">{{ $comment->created_at->diffForHumans() }}</span>
+                                                </div>
+
+                                                {{-- Menu Opsi (Titik Tiga) --}}
+                                                @auth
+                                                    <div class="relative" x-data="{ open: false }">
+                                                        <button @click="open = !open" class="text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded hover:bg-gray-100 transition">
+                                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                                            </svg>
+                                                        </button>
+
+                                                        <div x-show="open" @click.away="open = false"
+                                                             x-transition:enter="transition ease-out duration-100"
+                                                             x-transition:enter-start="transform opacity-0 scale-95"
+                                                             x-transition:enter-end="transform opacity-100 scale-100"
+                                                             class="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg z-50 border border-gray-100 py-1 origin-top-right"
+                                                             style="display: none;">
+
+                                                            @if(Auth::id() === $comment->user_id)
+                                                                <button onclick="deleteComment({{ $comment->id }})"
+                                                                        class="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition flex items-center">
+                                                                    <svg class="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                                    Hapus
+                                                                </button>
+                                                            @else
+                                                                <button onclick="openReportModal('comment', {{ $comment->id }})"
+                                                                        class="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition flex items-center">
+                                                                    <svg class="w-3 h-3 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-8a2 2 0 01-2-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H3z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v17"></path></svg>
+                                                                    Laporkan
+                                                                </button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endauth
+                                            </div>
+
+                                            <p class="text-gray-800 text-sm whitespace-pre-wrap break-words leading-relaxed">{{ $comment->body }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center py-8" id="no-comments-text">
+                                    <div class="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                    </div>
+                                    <p class="text-gray-500 text-sm">Belum ada komentar.</p>
+                                    <p class="text-gray-400 text-xs mt-1">Jadilah yang pertama berpendapat!</p>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -295,12 +305,18 @@
         }
 
         // --- 3. FITUR KIRIM KOMENTAR ---
+        // --- 3. FITUR KIRIM KOMENTAR ---
         function submitComment(event, artworkId) {
             event.preventDefault();
             const bodyInput = document.getElementById('comment-body');
             const noCommentsText = document.getElementById('no-comments-text');
+            const submitBtn = event.target.querySelector('button[type="submit"]');
 
             if (!bodyInput.value.trim()) return;
+
+            // Disable button biar gak double submit
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             axios.post('/comment/artwork/' + artworkId, { body: bodyInput.value })
             .then(function (response) {
@@ -330,10 +346,19 @@
                     </div>
                 `;
 
-                document.getElementById('comments-list').insertAdjacentHTML('beforeend', commentHtml);
+                // PERUBAHAN PENTING: Pakai 'afterbegin' agar muncul di PALING ATAS
+                document.getElementById('comments-list').insertAdjacentHTML('afterbegin', commentHtml);
+
+                // Scroll container ke paling atas agar user melihat komentarnya
+                document.getElementById('comments-container').scrollTop = 0;
+
                 bodyInput.value = '';
             })
-            .catch(err => alert('Gagal mengirim komentar.'));
+            .catch(err => alert('Gagal mengirim komentar.'))
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            });
         }
 
         // --- 4. FITUR HAPUS KOMENTAR ---

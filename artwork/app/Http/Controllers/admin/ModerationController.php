@@ -13,7 +13,6 @@ class ModerationController extends Controller
     public function index()
     {
         // Ambil laporan dengan relasi artwork, comment, dan reporter
-        // agar tidak error "Attempt to read property on null" di view
         $reports = Reports::with(['reporterUser', 'artwork', 'comment'])
             ->where('status', 'pending')
             ->latest()

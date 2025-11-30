@@ -4,9 +4,6 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Favorites') }}
             </h2>
-            <span class="text-sm text-gray-500">
-                {{ $favorites->total() }} karya disimpan
-            </span>
         </div>
     </x-slot>
 
@@ -52,7 +49,7 @@
                             </a>
 
                             {{-- Tombol Action Cepat (Opsional: Unfavorite langsung dari sini) --}}
-                            
+
 
                         </div>
                     @endforeach
