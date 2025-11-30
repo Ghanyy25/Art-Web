@@ -77,7 +77,7 @@
             @else
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-0 sm:px-0">
                     @foreach($challenges as $challenge)
-                        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col h-full group">
+                        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 flex flex-col h-full group">
 
                             {{-- Gambar Banner --}}
                             <div class="h-48 w-full bg-gray-200 relative overflow-hidden">

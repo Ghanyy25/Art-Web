@@ -21,7 +21,7 @@
                         <div class="space-y-8">
                             @foreach($feedArtworks as $artwork)
                                 {{-- Card Feed Item --}}
-                                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-100">
+                                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
 
                                     {{-- Header Card: Info User --}}
                                     <div class="p-4 flex items-center justify-between border-b border-gray-50 bg-gray-50/50">

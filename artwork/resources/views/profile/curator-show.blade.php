@@ -1,15 +1,54 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profil Kurator') }}
-        </h2>
+        <div class="flex justify-between items-center w-full">
+
+            <!-- Judul Kiri -->
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Profil Kreator') }}
+            </h2>
+
+            <!-- Ikon Setting + Dropdown (pakai Alpine.js biar ringan) -->
+        @if(auth()->check() && auth()->id() === $curator->id)
+            <div x-data="{ open: false }" @click.away="open = false" class="relative">
+                <button @click="open = !open"
+                        class="p-2 rounded-full hover:bg-gray-100 transition focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                    <i class="fas fa-cog text-xl text-gray-600"></i>
+                </button>
+
+                <!-- Dropdown -->
+                <div x-show="open"
+                    x-transition
+                    class="absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden z-50">
+                    <div class="py-2">
+                        <a href="{{ route('profile.edit') }}"
+                        class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition">
+                            <i class="fas fa-user-cog mr-3 w-5"></i>
+                            Kelola Akun
+                        </a>
+
+                        <hr class="border-gray-100">
+
+                        <form method="POST" action="{{ route('logout') }}" class="block">
+                            @csrf
+                            <button type="submit"
+                                    class="w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition">
+                                <i class="fas fa-sign-out-alt mr-3 w-5"></i>
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
 
             {{-- BAGIAN 1: INFO KURATOR --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
                 <div class="p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-8">
 
                     {{-- Avatar --}}
@@ -36,7 +75,7 @@
                         @if(auth()->check() && auth()->id() === $curator->id)
                             <div class="mt-4 flex space-x-3">
                                 {{-- Tombol Edit Profil --}}
-                                <a href="{{ route('profile.edit') }}"
+                                <a href="{{ route('profile.editprofile') }}"
                                 class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                     Edit Profil
@@ -71,14 +110,14 @@
             </div>
 
             {{-- BAGIAN 2: DAFTAR CHALLENGE --}}
-            <div>
+            <div >
                 <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                     <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                     Challenge by {{ $curator->name }}
                 </h3>
 
                 @if($challenges->count() > 0)
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
                         @foreach($challenges as $challenge)
                             @php
                                 $now = now();

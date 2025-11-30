@@ -77,7 +77,7 @@
             </div>
 
             {{-- Welcome Banner --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-bold mb-2">Selamat Datang, Admin!</h3>
                     <p class="text-gray-600">

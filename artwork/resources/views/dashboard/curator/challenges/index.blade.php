@@ -50,11 +50,11 @@
 
     {{-- BAGIAN KONTEN UTAMA --}}
     {{-- Bagian ini mendengarkan sinyal 'layout-change' dari header --}}
-    <div class="py-12"
+    <div class="py-6"
          x-data="{ viewMode: localStorage.getItem('view_mode') || 'grid' }"
          @layout-change.window="viewMode = $event.detail">
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-7">
 
             {{-- Alert Sukses --}}
             @if(session('success'))
@@ -89,7 +89,7 @@
                             }
                         @endphp
 
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col h-full border border-gray-100">
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col h-full border border-gray-200">
                             {{-- Banner --}}
                             <div class="relative h-48 bg-gray-200 group">
                                 <img src="{{ Storage::url($challenge->banner_image) ? Storage::url($challenge->banner_image) : asset('images/default_banner.jpg') }}"

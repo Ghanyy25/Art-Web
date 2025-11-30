@@ -43,11 +43,11 @@
 
         </div>
     </x-slot>
-    <div class="py-12">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="py-6">
+        <div class="max-w-5xl mx-auto sm:px-6 lg:px-5 space-y-6">
 
             {{-- BAGIAN 1: INFO PROFIL KREATOR --}}
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border border-gray-200">
                 <div class="flex flex-col md:flex-row md:items-start gap-6">
 
                     {{-- Foto Profil --}}
@@ -140,7 +140,7 @@
             </div>
 
             {{-- BAGIAN 2: GALERI KARYA --}}
-            <div class="bg-white overflow-hidden shadow sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow sm:rounded-lg border border-gray-200">
                 <div class="p-6 text-gray-900">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-bold text-gray-900">{{ __('Galeri Portofolio') }}</h3>
