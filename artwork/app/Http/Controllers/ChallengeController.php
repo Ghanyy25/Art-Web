@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Challenges;
+use App\Models\ChallengeSubmission;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ChallengeController extends Controller
 {
@@ -71,7 +73,11 @@ class ChallengeController extends Controller
                             ->with('artwork.user')
                             ->get();
 
-        return view('challenges.show', compact('challenge', 'submissions', 'winners'));
+        $existingSubmission = ChallengeSubmission::where('challenge_id', $challenge-> id)
+                                ->where('user_id', Auth::id())
+                                ->first();
+
+        return view('challenges.show', compact('challenge', 'submissions', 'winners', 'existingSubmission'));
     }
 
 

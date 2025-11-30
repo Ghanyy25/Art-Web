@@ -198,10 +198,16 @@
 
                                     {{-- Cek apakah user sudah submit (Opsional, perlu pass variable $hasSubmitted dari controller) --}}
                                     {{-- Untuk saat ini kita arahkan saja, nanti di controller submit akan dicek lagi --}}
-                                    <a href="{{ route('challenge.submit.create', $challenge->id) }}"
-                                       class="block w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-md transition transform hover:-translate-y-0.5">
-                                        Upload Karya Sekarang
-                                    </a>
+                                    @if ($existingSubmission)
+                                        <div class="bg-green-50 p-3 rounded-lg text-green-700 text-sm font-medium">
+                                            <i class="fas fa-check-circle mr-1"></i> Anda sudah mengirimkan karya untuk challenge ini.
+                                        </div>
+                                    @else
+                                        <a href="{{ route('challenge.submit.create', $challenge->id) }}"
+                                           class="block w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-md transition transform hover:-translate-y-0.5">
+                                            Upload Karya Sekarang
+                                        </a>
+                                    @endif
                                 @elseif($challenge->start_date > now())
                                     <div class="bg-yellow-50 p-3 rounded-lg text-yellow-700 text-sm">
                                         <i class="fas fa-clock mr-1"></i> Challenge Belum Dimulai
